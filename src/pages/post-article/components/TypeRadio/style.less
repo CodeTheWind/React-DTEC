@@ -1,0 +1,27 @@
+.radio {
+  display: inline-block;
+  margin-bottom: 10px;
+
+  input {
+    width: 0;
+    visibility: hidden;
+  }
+
+  .label {
+    display: inline-block;
+    padding: 0 10px;
+    margin-right: 16px;
+    line-height: 28px;
+    color: #333333;
+    font-size: 12px;
+    background-color: #ffffff;
+    border-radius: 3px;
+    border: 1px solid #cccccc;
+    cursor: pointer;
+  }
+
+  input[type='radio']:checked+label {
+    color: #0077ff;
+    background-color: rgba(0, 127, 255, .05);
+  }
+}

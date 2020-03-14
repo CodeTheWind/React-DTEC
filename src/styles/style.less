@@ -1,0 +1,32 @@
+.alone-ellipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.multiple-ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  /* 行数 */
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+}
+
+.container {
+  position: relative;
+  margin: 0 auto;
+  width: 1260px;
+}
+
+.clearfix {
+  zoom: 1;
+}
+
+.clearfix::after {
+  content: '.';
+  display: block;
+  height: 0;
+  visibility: hidden;
+  clear: both;
+}

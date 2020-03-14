@@ -1,0 +1,92 @@
+.nav {
+  .desc {
+    height: 72px;
+    line-height: 72px;
+
+    .logo {
+      float: left;
+      font-size: 24px;
+      letter-spacing: 8px;
+    }
+
+    .describle {
+      float: left;
+      margin-left: 50px;
+      font-size: 14px;
+    }
+
+    .search {
+      float: right;
+      width: 380px;
+      height: 72px;
+
+      .search-box {
+        position: relative;
+        margin-top: 16px;
+        height: 38px;
+        border: 1px solid #333333;
+
+        input[type="text"] {
+          position: absolute;
+          left: 0;
+          top: 0;
+          padding: 0 10px;
+          height: 36px;
+          width: 280px;
+          font-size: 15px;
+          outline: none;
+          border: 0;
+        }
+
+        .search-btn {
+          position: absolute;
+          right: 0;
+          top: 0;
+          width: 80px;
+          height: 36px;
+          color: #ffffff;
+          background-color: #333333;
+          border: 0;
+          border-left: 1px solid #333333;
+          transition: all .4s linear;
+          outline: none;
+          cursor: pointer;
+        }
+
+        .search-btn:hover {
+          color: #333333;
+          background-color: #fff;
+        }
+      }
+    }
+  }
+
+  .navbar {
+    height: 60px;
+    line-height: 60px;
+    border-top: 1px solid #eaeaea;
+    border-bottom: 1px solid #eaeaea;
+
+    .nav-list {
+      float: left;
+
+      li {
+        float: left;
+        padding: 0 24px;
+        margin-right: 5px;
+        cursor: pointer;
+        transition: all .3s linear;
+      }
+
+      li:hover {
+        color: #ffffff;
+        background-color: #333333;
+      }
+
+      .active {
+        color: #ffffff;
+        background-color: #333333;
+      }
+    }
+  }
+}
