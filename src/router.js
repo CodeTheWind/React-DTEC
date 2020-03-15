@@ -9,7 +9,8 @@ const HomePage = asyncComponent(() => import('./pages/home-page'));
 const ArticleDetails = asyncComponent(() => import('./pages/article-details'));
 const UserCenter = asyncComponent(() => import('./pages/user-center'));
 const PostArticle = asyncComponent(() => import('./pages/post-article'));
-const EditProfile = asyncComponent(() => import('./pages/edit-profile'));
+const SettingCenter = asyncComponent(() => import('./pages/setting-center'));
+
 const Exception = asyncComponent(() => import('./pages/exception'));
 
 const Router = () => (
@@ -19,7 +20,8 @@ const Router = () => (
       <Route exact path="/article/:ids" component={ArticleDetails} />
       <Route exact path="/post/:ids" component={PostArticle} />
       <Route exact path="/user/:ids" component={UserCenter} />
-      <Route exact path="/user/setting/profile" component={EditProfile} />
+      <Route exact path="/user/setting/:type" component={SettingCenter} />
+
       <Route exact path="/exception/:code" component={Exception} />
     </Switch>
   </HashRouter>
