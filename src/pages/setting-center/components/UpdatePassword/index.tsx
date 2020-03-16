@@ -51,7 +51,7 @@ class UpdatePassword extends React.Component<UpdatePasswordPropsType, UpdatePass
         <div className="row">
           <div className="label">原密码</div>
           <div className="input">
-            <input type="text"
+            <input type="password"
               placeholder="请输入原密码"
               value={this.state.oldPasswd}
               onChange={this.onHandleOldPasswd}
@@ -61,7 +61,7 @@ class UpdatePassword extends React.Component<UpdatePasswordPropsType, UpdatePass
         <div className="row">
           <div className="label">新密码</div>
           <div className="input">
-            <input type="text"
+            <input type="password"
               placeholder="请输入新密码"
               value={this.state.newPasswd}
               onChange={this.onHandleNewPasswd}
@@ -71,7 +71,7 @@ class UpdatePassword extends React.Component<UpdatePasswordPropsType, UpdatePass
         <div className="row">
           <div className="label">确认新密码</div>
           <div className="input">
-            <input type="text"
+            <input type="password"
               placeholder="确认新密码"
               value={this.state.rNewPasswd}
               onChange={this.onHandleRNewPasswd}

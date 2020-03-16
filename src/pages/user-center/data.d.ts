@@ -1,4 +1,3 @@
-
 export interface ParamsType {
   ids: string;
 }

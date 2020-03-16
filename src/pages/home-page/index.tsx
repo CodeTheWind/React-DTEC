@@ -39,6 +39,7 @@ class HomePage extends React.Component {
   state = {
     registerWindowFlag: false,
     isLogin: false,
+    hasNextPage: true,
     lphone: '',
     lpasswd: '',
     rphone: '',
@@ -79,7 +80,9 @@ class HomePage extends React.Component {
    */
   getArticleData = () => {
     getArticleList(this.articleListParams).then((res: any) => {
-      console.log(res);
+      if (res.data.length <= 10) {
+        this.setState({ hasNextPage: false })
+      }
       this.setState({ articleList: res.data });
     })
   }
@@ -104,8 +107,13 @@ class HomePage extends React.Component {
    */
   onLoadMore = () => {
     this.articleListParams.page++;
+    let articleList: ArticleItemType[] = this.state.articleList;
     getArticleList(this.articleListParams).then((res: any) => {
-      // this.setState({ articleList: this.state.articleList.push(res.data) });
+      articleList.push(...res.data)
+      this.setState({ articleList });
+      if (res.data.length <= 10) {
+        this.setState({ hasNextPage: false })
+      }
     })
   }
 
@@ -259,7 +267,9 @@ class HomePage extends React.Component {
                   <Link to={`/article/${item.ids}`}>continune reading</Link>
                 </div>
               ))}
-              <button className="load-more" onClick={this.onLoadMore}>加载更多</button>
+              {this.state.hasNextPage ?
+                <button className="load-more" onClick={this.onLoadMore}>加载更多</button> :
+                <button className="load-more">已经到底啦！</button>}
             </div>
             {/* 侧边栏 */}
             <aside className="hot-list">

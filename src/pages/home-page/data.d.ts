@@ -19,13 +19,7 @@ export interface UserLoginParamsType {
   password: string;
 }
 
-export interface userResType {
-  msg: string;
-  state: number;
-  data?: userDataType;
-}
-
-export interface userDataType {
+export interface UserDataType {
   username: string;
   ids: string;
   avatar: string;
