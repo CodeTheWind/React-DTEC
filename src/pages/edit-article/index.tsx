@@ -1,19 +1,21 @@
 import React from 'react';
 import ReactQuill from 'react-quill'; // ES6
 import 'react-quill/dist/quill.snow.css';
-import './style.less';
+import '../post-article/style.less';
 import { Button, Modal, message } from 'antd';
-import TypeRadio from './components/TypeRadio';
-import { postArticle } from './service';
+import TypeRadio from '../post-article/components/TypeRadio';
+import { updateArticle } from './service';
 import { getArticleCategory } from '../home-page/service';
+import { getArticleDetails } from '../article-details/service';
 import { Link } from 'react-router-dom';
 
-class PostArticle extends React.Component<any, any> {
+class EditArticle extends React.Component<any, any> {
 
   constructor(props: any) {
     super(props);
     this.state = {
       userIds: '',
+      ids: '',
       title: '',
       des: '',
       content: '',
@@ -31,11 +33,24 @@ class PostArticle extends React.Component<any, any> {
   }
 
   componentDidMount() {
-    getArticleCategory().then((res: any) => {
+    const { params } = this.props.match;
+    // 获取文章详情
+    getArticleDetails(params).then((res: any) => {
+      const { articleData } = res;
       this.setState({
-        userIds: this.props.match.params.ids,
-        typeList: res.data
-      });
+        ids: articleData.ids,
+        userIds: articleData.userIds,
+        title: articleData.title,
+        des: articleData.des,
+        content: articleData.content,
+        typeId: articleData.typeId,
+        typeName: articleData.typeName,
+        tag: articleData.tag,
+      })
+    });
+    // 获取分类选项
+    getArticleCategory().then((res: any) => {
+      this.setState({ typeList: res.data });
     })
   }
 
@@ -76,11 +91,11 @@ class PostArticle extends React.Component<any, any> {
   }
 
   /**
-   * 发布文章
+   * 修改文章
    */
   handleOk = () => {
-    const { userIds, title, des, content, typeId, typeName, tag } = this.state;
-    const params = { userIds, title, des, content, typeId, typeName, tag };
+    const { userIds, ids, title, des, content, typeId, typeName, tag } = this.state;
+    const params = { userIds, ids, title, des, content, typeId, typeName, tag };
 
     this.setState({ confirmLoading: true });
     setTimeout(() => {
@@ -88,10 +103,10 @@ class PostArticle extends React.Component<any, any> {
         visible: false,
         confirmLoading: false,
       }, () => {
-        postArticle(params).then((res: any) => {
+        updateArticle(params).then((res: any) => {
           if (!res.state) {
-            message.success('发布成功！', 1.5, () => {
-              this.props.history.push(`/article/${res.articleIds}`);
+            message.success('修改成功！', 1.5, () => {
+              this.props.history.push(`/article/${res.ids}`);
             })
           } else {
             message.error(res.msg);
@@ -113,15 +128,15 @@ class PostArticle extends React.Component<any, any> {
             />
           </div>
           <div className="action-bar">
-            <Link to="/">返回首页</Link>
-            <Button type="primary" onClick={this.showModel}>发布</Button>
+            <Link to={`/user/${this.state.userIds}`}>返回首页</Link>
+            <Button type="primary" onClick={this.showModel}>确认修改</Button>
             <Modal
-              title="发布文章"
+              title="修改文章"
               visible={this.state.visible}
               onOk={this.handleOk}
               onCancel={this.handleCancel}
               confirmLoading={this.state.confirmLoading}
-              okText="发布"
+              okText="确认"
               cancelText="取消"
             >
               <div className="row">
@@ -130,6 +145,7 @@ class PostArticle extends React.Component<any, any> {
                   <TypeRadio
                     key={item.typeId}
                     id={item.typeId}
+                    defaultChecked={item.typeId === this.state.typeId ? true : false}
                     value={item.typeName}
                     name="分类"
                     getTypeValue={this.getTypeValue}
@@ -164,4 +180,4 @@ class PostArticle extends React.Component<any, any> {
   }
 }
 
-export default PostArticle;
+export default EditArticle;

@@ -13,20 +13,20 @@ import { Link } from 'react-router-dom';
 import { isPhone, checkRegisterPassword } from './util';
 import './_mock';
 
-const avatar = require('../../assets/avatar.jpg');
-
 /**
  * 热点列表 
  */
 const HOT_ITEM1: AsideItemType[] = [
-  { id: 'sakk21lks', title: '文章1' },
-  { id: 'asfcadqwv', title: '文章2' },
-  { id: 'laskdoi2k', title: '文章3' },
-  { id: 'c9djqk3j3', title: '文章4' },
-  { id: 'as39kjjid', title: '文章5' },
-  { id: 'sakalo1ks', title: '文章6' },
-  { id: 'aalao21la', title: '文章7' },
+  { ids: 'sakk21lks', title: '文章1' },
+  { ids: 'asfcadqwv', title: '文章2' },
+  { ids: 'laskdoi2k', title: '文章3' },
+  { ids: 'c9djqk3j3', title: '文章4' },
+  { ids: 'as39kjjids', title: '文章5' },
+  { ids: 'sakalo1ks', title: '文章6' },
+  { ids: 'aalao21la', title: '文章7' },
 ];
+
+const BASE_URL = "http://127.0.0.1";
 
 class HomePage extends React.Component {
   // 获取文章列表请求参数
@@ -279,7 +279,7 @@ class HomePage extends React.Component {
                     <div className="title">个人信息</div>
                     <div className="base-data clearfix">
                       <div className="avatar">
-                        <img src={avatar} alt="" />
+                        <img src={`${BASE_URL}${userData.avatar}`} alt="" />
                       </div>
                       <div className="info">
                         <Link to={`/user/${userData.ids}`}>{userData.username}</Link>

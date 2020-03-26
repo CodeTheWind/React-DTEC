@@ -9,6 +9,26 @@ Mock.mock(`${BASE_URL}/article/details?ids=article_1fxfidxtcj`, 'get', {
   "msg": "文章详情",
   "state": 0,
   "articleData": {
+    "comments": [
+      {
+        username: '张大炮',
+        avatar: '',
+        content: '写得好，我一个字没看懂',
+        date: '2020.03.20 14:36',
+      },
+      {
+        username: '尼古拉斯赵四',
+        avatar: '',
+        content: '你为什么扒拉人小女孩？',
+        date: '2020.03.10 12:36',
+      },
+      {
+        username: '孙子',
+        avatar: '',
+        content: '我就吃两个，剩下的都给你。',
+        date: '2020.03.20 14:36',
+      }
+    ],
     "ids": "article_1fxfidxtcj",
     "views": 2,
     "likes": 0,

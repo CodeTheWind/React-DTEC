@@ -9,6 +9,7 @@ const HomePage = asyncComponent(() => import('./pages/home-page'));
 const ArticleDetails = asyncComponent(() => import('./pages/article-details'));
 const UserCenter = asyncComponent(() => import('./pages/user-center'));
 const PostArticle = asyncComponent(() => import('./pages/post-article'));
+const EditArticle = asyncComponent(() => import('./pages/edit-article'));
 const SettingCenter = asyncComponent(() => import('./pages/setting-center'));
 
 const Exception = asyncComponent(() => import('./pages/exception'));
@@ -19,6 +20,7 @@ const Router = () => (
       <Route exact path="/" component={HomePage} />
       <Route exact path="/article/:ids" component={ArticleDetails} />
       <Route exact path="/post/:ids" component={PostArticle} />
+      <Route exact path="/edit/:ids" component={EditArticle} />
       <Route exact path="/user/:ids" component={UserCenter} />
       <Route exact path="/user/setting/:type" component={SettingCenter} />
 

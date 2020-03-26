@@ -5,6 +5,7 @@ export interface ArticleItemType {
   des: string;
   typeName: string;
   likes: number;
+  comments?: [];
   operation?: boolean;
 }
 

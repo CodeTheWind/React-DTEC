@@ -1,15 +1,32 @@
 import React from 'react';
 import { EditProfilePropsType } from '../../data';
 
-const avatar = require('../../../../assets/avatar.jpg');
+const BASE_URL = "http://127.0.0.1";
 
 class EditProfile extends React.Component<EditProfilePropsType, any> {
+  constructor(props: EditProfilePropsType) {
+    super(props);
+    
+    this.upLoadImg = this.upLoadImg.bind(this);
+  }
   /**
    * 保存
    */
   onSaveProfile = () => {
     const params = this.props.profile;
+    params.avatar = undefined;
     this.props.onSaveProfile(params);
+  }
+
+  /**
+   * 上传头像
+   */
+  upLoadImg = (e: any) => {
+    let file = e.target.files[0];
+    const formdata = new FormData();
+    formdata.append('file', file);
+    
+    this.props.upLoadAvatar(formdata);
   }
 
   render() {
@@ -22,10 +39,12 @@ class EditProfile extends React.Component<EditProfilePropsType, any> {
           <div className="label">头像</div>
           <div className="input">
             <div className="avatar">
-              <img src={avatar} alt="" />
+              <img src={`${BASE_URL}${profile.avatar}`} alt="" />
             </div>
             <div className="action">
               <p>支持 jpg、png 格式大小 5M 以内的图片</p>
+              <input type="file" onChange={this.upLoadImg} />
+              <button className="save">点击上传</button>
             </div>
           </div>
         </div>

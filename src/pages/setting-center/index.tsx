@@ -4,9 +4,9 @@ import Header from '../../components/Header';
 import SettingNav from './components/SetingNav';
 import EditProfile from './components/EditProfile';
 import UpdatePassword from './components/UpdatePassword';
-import { editProfile, updatePassword } from './service';
+import { postAvatar, editProfile, updatePassword, editAvatar } from './service';
 import { getPersonalData } from '../home-page/service';
-import { ProfileType, UpdatePasswordParamsType } from './data';
+import { ProfileType, UpdatePasswordParamsType, UpdateAvatarParamsType } from './data';
 import { message } from 'antd';
 import '../home-page/_mock';
 
@@ -34,8 +34,8 @@ class SettingCenter extends React.Component<any, ProfileType> {
   }
 
   /**
- * 双向绑定 用户名、职业、公司、个人简介
- */
+   * 双向绑定 用户名、职业、公司、个人简介
+   */
   onHandleUsername = (username: string) => {
     this.setState({ username })
   }
@@ -47,6 +47,23 @@ class SettingCenter extends React.Component<any, ProfileType> {
   }
   onHandleMotto = (motto: string) => {
     this.setState({ motto });
+  }
+
+  /**
+   * 上传头像并修改
+   */
+  upLoadImg = (params: any) => {
+    postAvatar(params).then(res => {
+      this.setState({ avatar: res.data.path });
+      const params: UpdateAvatarParamsType = { avatar: res.data.path };
+      editAvatar(params).then((res: any) => {
+        if (res.state === 200) {
+          message.success('修改成功！', 2);
+        } else {
+          message.error(res.msg, 2);
+        }
+      });
+    });
   }
 
   /**
@@ -78,11 +95,12 @@ class SettingCenter extends React.Component<any, ProfileType> {
   render() {
     const profile = this.state;
 
-    const type = this.props.match.params.type
+    const type = this.props.match.params.type;
     let component = null;
     switch (type) {
       case 'profile':
         component = <EditProfile
+          upLoadAvatar={this.upLoadImg}
           setUsername={this.onHandleUsername}
           setProfession={this.onHandleProfession}
           setCompany={this.onHandleCompany}

@@ -1,14 +1,15 @@
   .article-details {
     display: flex;
     margin-top: 20px;
+    min-height: calc(100vh - 210px);
 
     article {
       position: relative;
       flex: 5;
-      height: 800px;
 
       h1 {
         margin: 0;
+        font-size: 2.2em;
       }
 
       .article-info {
@@ -22,11 +23,123 @@
 
       .article {
         font-size: 16px;
+
+        h1 {
+          font-size: 1.8em;
+        }
+      }
+
+      .comments {
+        margin-top: 20px;
+
+        .title {
+          height: 32px;
+          color: #ffffff;
+          text-align: center;
+          line-height: 32px;
+          background-color: #333333;
+        }
+
+        .action {
+          margin: 20px 0;
+
+          .action-head {
+            display: flex;
+            height: 50px;
+
+            .avatar {
+              flex: 0 0 auto;
+
+              img {
+                width: 50px;
+                height: 50px;
+                object-fit: cover;
+                border-radius: 50%;
+              }
+            }
+
+            .input {
+              flex: 1 1 auto;
+              margin-left: 20px;
+              height: 50px;
+
+              input {
+                padding-left: 10px;
+                margin-top: 7px;
+                width: 100%;
+                height: 36px;
+                border: 1px solid #999999;
+                border-radius: 2px;
+                outline: none;
+              }
+            }
+
+          }
+
+          .action-submit {
+            height: 40px;
+
+            button {
+              float: right;
+              width: 70px;
+              height: 32px;
+              color: #ffffff;
+              background-color: #333;
+              border: 0;
+              border-radius: 3px;
+              outline: none;
+              cursor: pointer;
+              transition: all 0.3s linear;
+            }
+
+            button:hover {
+              background-color: #222222;
+            }
+
+            button[disabled] {
+              background-color: #999999;
+              cursor: default;
+            }
+          }
+        }
+
+        .tips {
+          line-height: 50px;
+        }
+
+        .comment-list {
+          padding-left: 70px;
+
+          .item {
+            display: flex;
+            margin-bottom: 20px;
+
+            .avatar {
+              flex: 0 0 auto;
+
+              img {
+                width: 46px;
+                height: 46px;
+                object-fit: cover;
+                border-radius: 50%;
+              }
+            }
+
+            .item-content {
+              margin-left: 10px;
+
+              .date {
+                margin-top: 5px;
+                color: #999999;
+              }
+            }
+          }
+        }
       }
     }
 
     aside {
       flex: 2;
-      margin-left: 30px;
+      margin-left: 60px;
     }
   }

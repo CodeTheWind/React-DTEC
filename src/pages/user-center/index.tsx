@@ -9,7 +9,7 @@ import { ArticleItemType } from '../home-page/data';
 import { message } from 'antd';
 import './_mock';
 
-const avatar = require('../../assets/avatar.jpg');
+const BASE_URL = "http://127.0.0.1";
 
 class UserCenter extends React.Component<any, UserCenterStateType> {
 
@@ -25,6 +25,8 @@ class UserCenter extends React.Component<any, UserCenterStateType> {
         company: '',
       },
       articleList: [],
+      likes: 0,
+      views: 0,
       owner: true,
     }
   }
@@ -54,8 +56,7 @@ class UserCenter extends React.Component<any, UserCenterStateType> {
       res.data.forEach((item: ArticleItemType) => {
         item.operation = false;
       });
-      this.setState({ articleList: res.data }
-      );
+      this.setState({ articleList: res.data, likes: res.likes, views: res.views });
     })
   }
 
@@ -120,7 +121,7 @@ class UserCenter extends React.Component<any, UserCenterStateType> {
           <section className="user-panel">
             <div className="base-data clearfix">
               <div className="avatar">
-                <img src={avatar} alt="" />
+                <img src={`${BASE_URL}${userData.avatar}`} alt="" />
               </div>
               <div className="info">
                 <p className="username">{userData.username}</p>
@@ -158,7 +159,7 @@ class UserCenter extends React.Component<any, UserCenterStateType> {
                   <div className="dynamic" key={item.ids}>
                     <div className="base-info clearfix">
                       <div className="avatar">
-                        <img src={avatar} alt="" />
+                        <img src={`${BASE_URL}${userData.avatar}`} alt="" />
                       </div>
                       <div className="info">
                         <p className="username">{userData.username}</p>
@@ -177,7 +178,7 @@ class UserCenter extends React.Component<any, UserCenterStateType> {
                         <i className="iconfont icon-like"></i>{item.likes === 0 ? '赞' : item.likes}
                       </div>
                       <div className="action-item">
-                        <i className="iconfont icon-chat"></i>评论
+                        <i className="iconfont icon-chat"></i>{item.comments?.length === 0 ? '评论' : item.comments?.length}
                       </div>
                       <div className="action-item">
                         <i className="iconfont icon-share"></i>分享
@@ -199,8 +200,8 @@ class UserCenter extends React.Component<any, UserCenterStateType> {
             <section className="achievement">
               <div className="title">个人成就</div>
               <ul className="achievement-list">
-                <li><i className="iconfont icon-like"></i>文章被点赞 245</li>
-                <li><i className="iconfont icon-view"></i>文章被阅读 12,256</li>
+                <li><i className="iconfont icon-like"></i>文章被点赞 {this.state.likes}</li>
+                <li><i className="iconfont icon-view"></i>文章被阅读 {this.state.views}</li>
                 <li><i className="iconfont icon-collection"></i>文章被收藏 12,125</li>
               </ul>
             </section>

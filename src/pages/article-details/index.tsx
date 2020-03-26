@@ -6,24 +6,32 @@ import AsideItem from '../../components/AsideItem';
 import Suspended from './components/Suspended';
 import AuthorData from './components/AuthorData';
 import { AsideItemType } from '../../components/AsideItem/data';
-import { getArticleDetails, onLikeArticle } from './service';
+import { getArticleDetails, likeArticle, commentArticle } from './service';
+import { getAuthorPost } from '../user-center/service';
 import { message } from 'antd';
 import './_mock';
+import '../user-center/_mock';
+import { getAuthorOtherArticles } from './util';
+import { ArticleCommentType, ArticleDetailsStateType } from './data';
+import { getPersonalData } from '../home-page/service';
+
 
 /**
  * 热点列表 
  */
 const HOT_ITEM1: AsideItemType[] = [
-  { id: 'sakk21lks', title: '文章1' },
-  { id: 'asfcadqwv', title: '文章2' },
-  { id: 'laskdoi2k', title: '文章3' },
-  { id: 'c9djqk3j3', title: '文章4' },
-  { id: 'as39kjjid', title: '文章5' },
-  { id: 'sakalo1ks', title: '文章6' },
-  { id: 'aalao21la', title: '文章7' },
+  { ids: 'sakk21lks', title: '文章1' },
+  { ids: 'asfcadqwv', title: '文章2' },
+  { ids: 'laskdoi2k', title: '文章3' },
+  { ids: 'c9djqk3j3', title: '文章4' },
+  { ids: 'as39kjjid', title: '文章5' },
+  { ids: 'sakalo1ks', title: '文章6' },
+  { ids: 'aalao21la', title: '文章7' },
 ];
 
-class ArticleDetails extends React.Component<any, any> {
+const BASE_URL = "http://127.0.0.1";
+
+class ArticleDetails extends React.Component<any, ArticleDetailsStateType> {
   state = {
     articleData: {
       title: '',
@@ -31,12 +39,22 @@ class ArticleDetails extends React.Component<any, any> {
       content: '',
       date: '',
       views: 0,
+      comments: [],
     },
-    userData: {
-      username: '',
+    authorData: {
       ids: '',
+      username: '',
+      avatar: '',
       motto: '',
     },
+    authorOthers: [],
+    likes: 0,
+    views: 0,
+
+    userAvatar: '',
+    comment: '',
+    submitFlag: false,
+    isLogin: false,
   }
 
   componentDidMount() {
@@ -48,10 +66,38 @@ class ArticleDetails extends React.Component<any, any> {
       } else {
         this.setState({
           articleData: res.articleData,
-          userData: res.userData
+          authorData: res.userData
+        });
+        const param = { ids: res.articleData.userIds };
+        getAuthorPost(param).then((res: any) => {
+          const authorOthers = getAuthorOtherArticles(res.data, params.ids);
+          this.setState({ authorOthers, views: res.views, likes: res.likes });
         })
       }
     })
+    getPersonalData().then((res: any) => {
+      if (res.state === 302) {
+        this.setState({ isLogin: false });
+      } else {
+        this.setState({ isLogin: true, userAvatar: res.data.avatar });
+      }
+    })
+  }
+
+  /**
+   * 绑定评论数据
+   */
+  onHandleConmment = (e: any) => {
+    this.setState({ comment: e.target.value });
+  }
+
+  onFocusInput = () => {
+    this.setState({ submitFlag: true });
+  }
+  onBlurInput = () => {
+    if (this.state.comment === '') {
+      this.setState({ submitFlag: false });
+    }
   }
 
   /**
@@ -59,7 +105,7 @@ class ArticleDetails extends React.Component<any, any> {
    */
   onLikesArticle = () => {
     const { params } = this.props.match;
-    onLikeArticle(params).then((res: any) => {
+    likeArticle(params).then((res: any) => {
       if (!res.state) {
         message.success(res.msg, 1.5);
       } else {
@@ -68,8 +114,33 @@ class ArticleDetails extends React.Component<any, any> {
     })
   }
 
+  /**
+   * 评论文章
+   */
+  onCommentArticle = () => {
+    const params = { ids: this.props.match.params.ids, comment: this.state.comment };
+
+    commentArticle(params).then((res: any) => {
+      if (res.state === 0) {
+        this.setState({ comment: '', submitFlag: false });
+        message.success(res.msg, 1.5, () => {
+          const { params } = this.props.match;
+          getArticleDetails(params).then((res: any) => {
+            if (res.state === 404) {
+              this.props.history.push('/exception/404');
+            } else {
+              this.setState({ articleData: res.articleData });
+            }
+          })
+        });
+      } else {
+        message.error(res.msg, 1.5);
+      }
+    })
+  }
+
   render() {
-    const { articleData, userData } = this.state;
+    const { articleData, authorData } = this.state;
 
     return (
       <>
@@ -84,12 +155,58 @@ class ArticleDetails extends React.Component<any, any> {
             <div className="article"
               dangerouslySetInnerHTML={{ __html: articleData.content }}
             ></div>
+            <div className="comments">
+              <div className="title">评论列表</div>
+              {
+                this.state.isLogin ?
+                  <div className="action">
+                    <div className="action-head">
+                      <div className="avatar">
+                        <img src={`${BASE_URL}${this.state.userAvatar}`} alt="" />
+                      </div>
+                      <div className="input">
+                        <input type="text" placeholder="输入评论..."
+                          onFocus={this.onFocusInput}
+                          onBlur={this.onBlurInput}
+                          onChange={this.onHandleConmment}
+                          value={this.state.comment}
+                        />
+                      </div>
+                    </div>
+                    {this.state.submitFlag &&
+                      <div className="action-submit">
+                        <button disabled={this.state.comment !== '' ? false : true}
+                          onClick={this.onCommentArticle}>评论</button>
+                      </div>}
+                  </div> :
+                  <div className="tips">登录后才可评论</div>
+              }
+
+              <div className="comment-list">
+                {articleData.comments.length > 0 ?
+                  articleData.comments.map((item: ArticleCommentType) => (
+                    <div className="item" key={item.date}>
+                      <div className="avatar">
+                        <img src={`${BASE_URL}${item.avatar}`} alt="" />
+                      </div>
+                      <div className="item-content">
+                        <p>{item.username}</p>
+                        <p>{item.content}</p>
+                        <p className="date">{item.date}</p>
+                      </div>
+                    </div>
+                  )) :
+                  <p>暂无评论！</p>
+                }
+              </div>
+            </div>
             <Suspended onLike={this.onLikesArticle} />
           </article>
           <aside>
-            <AuthorData userData={userData} />
+            <AuthorData userData={authorData} likes={this.state.likes} views={this.state.views} />
             <AsideItem title="本周排行" list={HOT_ITEM1} />
-            <AsideItem title="猜你喜欢" list={HOT_ITEM1} />
+            {this.state.authorOthers.length > 0 &&
+              <AsideItem title="作者发布的其它文章" list={this.state.authorOthers} />}
           </aside>
         </main>
         <Footer />

@@ -29,6 +29,8 @@ Mock.mock(`${BASE_URL}/user/data?ids=user_lheyk2ocqxe`, 'get', {
  */
 Mock.mock(`${BASE_URL}/article/list/userpost?ids=user_lheyk2ocqxe`, 'get', {
   "state": 0,
+  "likes": 199,
+  "views": 2999,
   "data": [
     {
       "ids": "article_23cch5biicl",

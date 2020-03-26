@@ -5,6 +5,8 @@ export interface ParamsType {
 export interface UserCenterStateType {
   userData: userDataType;
   articleList: any[];
+  likes: number;
+  views: number;
   owner: boolean;
 }
 

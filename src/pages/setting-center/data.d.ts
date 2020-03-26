@@ -28,21 +28,22 @@ export interface UpdatePasswordParamsType {
  */
 export interface EditProfilePropsType {
   profile: ProfileType;
-  setUsername: Function;
-  setProfession: Function;
-  setCompany: Function;
-  setMotto: Function;
-  onSaveProfile: Function;
+  upLoadAvatar: (params: any) => void;
+  setUsername: (username: string) => void;
+  setProfession: (profession: string) => void;
+  setCompany: (company: string) => void;
+  setMotto: (motto: string) => void;
+  onSaveProfile: (params: ProfileType) => void;
 }
 
 export interface ProfileType {
-  avatar: string;
+  avatar?: string;
   username: string;
   profession: string;
   company: string;
   motto: string;
 }
 
-
-
-
+export interface UpdateAvatarParamsType {
+  avatar: string;
+}

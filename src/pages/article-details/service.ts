@@ -11,6 +11,13 @@ export function getArticleDetails(params: ArticleDetailsParamsType) {
 /**
  * 点赞文章
  */
-export function onLikeArticle(params: ArticleDetailsParamsType) {
+export function likeArticle(params: ArticleDetailsParamsType) {
   return request.post('/article/like', params);
+}
+
+/**
+ * 评论文章
+ */
+export function commentArticle(params: any) {
+  return request.post('/article/comment', params);
 }

@@ -3,6 +3,8 @@ import './style.less';
 import { Link } from 'react-router-dom';
 import { AuthorDataPropsType } from '../../data';
 
+const BASE_URL = "http://127.0.0.1";
+
 class AuthorData extends React.Component<AuthorDataPropsType> {
   render() {
     const { userData } = this.props;
@@ -12,7 +14,7 @@ class AuthorData extends React.Component<AuthorDataPropsType> {
         <div className="info-content">
           <div className="base-info">
             <div className="avatar">
-              <p className="avatar-img"></p>
+              <img src={`${BASE_URL}${userData.avatar}`} alt=""/>
             </div>
             <div className="info">
               <Link to={`/user/${userData.ids}`}>{userData.username}</Link>
@@ -21,8 +23,8 @@ class AuthorData extends React.Component<AuthorDataPropsType> {
           </div>
         </div>
         <div className="about-author">
-          <p><i className="iconfont icon-like"></i> 文章获赞 365</p>
-          <p><i className="iconfont icon-view"></i> 文章被阅读 15505</p>
+          <p><i className="iconfont icon-like"></i> 文章获赞 {this.props.likes}</p>
+          <p><i className="iconfont icon-view"></i> 文章被阅读 {this.props.views}</p>
         </div>
       </section>
     )

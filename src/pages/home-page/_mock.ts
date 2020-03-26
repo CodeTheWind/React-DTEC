@@ -62,6 +62,7 @@ Mock.mock(`${BASE_URL}/user/personaldata`, 'get', {
   "msg": "dtec_9h4mjf4wb87",
   "state": 0,
   "data": {
+    "avatar": 'http://127.0.0.1:8000/img/avatar/default.png',
     "ids": "user_lheyk2ocqxe",
     "username": "dtec_9h4mjf4wb87",
     "sex": "保密",
