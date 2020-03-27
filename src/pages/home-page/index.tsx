@@ -7,24 +7,10 @@ import BackTop from '../../components/BackTop';
 import AsideItem from '../../components/AsideItem';
 import { Carousel, message } from 'antd';
 import { ArticleItemType, ArticleListParamsType, UserLoginParamsType } from './data';
-import { AsideItemType } from '../../components/AsideItem/data';
-import { getArticleCategory, getArticleList, userRegister, userLogin, userLogout, getPersonalData } from './service';
+import { getArticleCategory, getArticleList, userRegister, userLogin, userLogout, getPersonalData, getArticleHotList, getArticlePopularList } from './service';
 import { Link } from 'react-router-dom';
 import { isPhone, checkRegisterPassword } from './util';
 import './_mock';
-
-/**
- * 热点列表 
- */
-const HOT_ITEM1: AsideItemType[] = [
-  { ids: 'sakk21lks', title: '文章1' },
-  { ids: 'asfcadqwv', title: '文章2' },
-  { ids: 'laskdoi2k', title: '文章3' },
-  { ids: 'c9djqk3j3', title: '文章4' },
-  { ids: 'as39kjjids', title: '文章5' },
-  { ids: 'sakalo1ks', title: '文章6' },
-  { ids: 'aalao21la', title: '文章7' },
-];
 
 const BASE_URL = "http://127.0.0.1";
 
@@ -47,6 +33,8 @@ class HomePage extends React.Component {
     rcpasswd: '',
     typeList: [],
     articleList: [],
+    articleHotList: [],
+    articlePopularList: [],
     userData: {
       username: '',
       ids: '',
@@ -63,6 +51,12 @@ class HomePage extends React.Component {
     getArticleCategory().then((res: any) => {
       res.data.unshift({ typeName: '全部', typeId: 0 });
       this.setState({ typeList: res.data });
+    });
+    getArticleHotList().then((res: any) => {
+      this.setState({ articleHotList: res.data });
+    });
+    getArticlePopularList().then((res: any) => {
+      this.setState({ articlePopularList: res.data });
     })
   }
   /**
@@ -304,8 +298,8 @@ class HomePage extends React.Component {
                   </section>
               }
 
-              <AsideItem title="本周排行" list={HOT_ITEM1} />
-              <AsideItem title="猜你喜欢" list={HOT_ITEM1} />
+              <AsideItem title="阅读榜" list={this.state.articleHotList} />
+              <AsideItem title="点赞榜" list={this.state.articlePopularList} />
             </aside>
           </div>
         </section>

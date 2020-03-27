@@ -1,12 +1,13 @@
 import React from 'react';
 import { EditProfilePropsType } from '../../data';
+import { message } from 'antd';
 
 const BASE_URL = "http://127.0.0.1";
 
 class EditProfile extends React.Component<EditProfilePropsType, any> {
   constructor(props: EditProfilePropsType) {
     super(props);
-    
+
     this.upLoadImg = this.upLoadImg.bind(this);
   }
   /**
@@ -23,10 +24,18 @@ class EditProfile extends React.Component<EditProfilePropsType, any> {
    */
   upLoadImg = (e: any) => {
     let file = e.target.files[0];
-    const formdata = new FormData();
-    formdata.append('file', file);
-    
-    this.props.upLoadAvatar(formdata);
+
+    console.log(file.size);
+
+    if (file.size > 1024 * 1024 * 2) {
+      message.error('图片过大， 请重新上传！', 2);
+    } else {
+      const formdata = new FormData();
+      formdata.append('file', file);
+
+      this.props.upLoadAvatar(formdata);
+    }
+
   }
 
   render() {
@@ -42,7 +51,7 @@ class EditProfile extends React.Component<EditProfilePropsType, any> {
               <img src={`${BASE_URL}${profile.avatar}`} alt="" />
             </div>
             <div className="action">
-              <p>支持 jpg、png 格式大小 5M 以内的图片</p>
+              <p>支持 jpg、png 格式大小 2M 以内的图片</p>
               <input type="file" onChange={this.upLoadImg} />
               <button className="save">点击上传</button>
             </div>

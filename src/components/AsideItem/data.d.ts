@@ -6,4 +6,5 @@ export interface AsideItemType {
 export interface AsideItemPropsType {
   title: string;
   list: AsideItemType[];
+  history?: any;
 }

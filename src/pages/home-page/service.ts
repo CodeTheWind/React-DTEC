@@ -16,6 +16,17 @@ export function getArticleList(params: ArticleListParamsType) {
 }
 
 /**
+ * 获取阅读量排行榜文章
+ */
+export function getArticleHotList() {
+  return request.get('/article/hotlist', {});
+}
+
+export function getArticlePopularList() {
+  return request.get('/article/popularlist', {});
+}
+
+/**
  * 获取个人资料
  */
 export function getPersonalData() {

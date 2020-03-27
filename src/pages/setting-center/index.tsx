@@ -58,7 +58,7 @@ class SettingCenter extends React.Component<any, ProfileType> {
       const params: UpdateAvatarParamsType = { avatar: res.data.path };
       editAvatar(params).then((res: any) => {
         if (res.state === 200) {
-          message.success('修改成功！', 2);
+          message.success('头像已更新！', 2);
         } else {
           message.error(res.msg, 2);
         }

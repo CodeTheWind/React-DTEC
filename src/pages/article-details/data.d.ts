@@ -11,7 +11,8 @@ interface ArticleType {
 export interface ArticleDetailsStateType {
   articleData: ArticleType;
   authorData: any;
-  authorOthers: any;
+  authorOthers: any[];
+  articleHotList: any[];
   likes: number;
   views: number;
   userAvatar: string;

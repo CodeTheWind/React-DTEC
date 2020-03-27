@@ -7,6 +7,7 @@ import { ArticleItemType } from "../home-page/data";
  */
 export function getAuthorOtherArticles(articleList: ArticleItemType[], currentArticleIds: string) {
   let newArticleList: ArticleItemType[] = [];
+  const COUNT: number = 7;
 
   articleList.forEach((item: ArticleItemType) => {
     if (item.ids !== currentArticleIds) {
@@ -14,8 +15,8 @@ export function getAuthorOtherArticles(articleList: ArticleItemType[], currentAr
     }
   })
 
-  if (newArticleList.length > 10) {
-    newArticleList.splice(10);
+  if (newArticleList.length > COUNT) {
+    newArticleList.splice(COUNT);
   }
 
   return newArticleList;

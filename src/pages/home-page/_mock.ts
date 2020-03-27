@@ -56,6 +56,97 @@ Mock.mock(`${BASE_URL}/article/list?page=1&typeId=0&keyword=`, 'get', {
 })
 
 /**
+ * 阅读排行榜
+ */
+Mock.mock(`${BASE_URL}/article/hotlist`, 'get', {
+
+  "msg": "热门文章",
+  "state": 0,
+  "data": [
+    {
+      "ids": "article_c6rnbqh70jr",
+      "title": "阿里前端攻城狮们写了一份前端面试题答案，请查收",
+      "views": 88
+    },
+    {
+      "ids": "article_rybzy55xc38",
+      "title": "另一个作者测试",
+      "views": 45
+    },
+    {
+      "ids": "article_uyz0vounmc",
+      "title": "这是刚刚修改的文章",
+      "views": 30
+    },
+    {
+      "ids": "article_zjlyxps34i",
+      "title": "成为猛男后的第一篇文章",
+      "views": 21
+    },
+    {
+      "ids": "article_7sb4emlo3bx",
+      "title": "11",
+      "views": 12
+    },
+    {
+      "ids": "article_irkyj84lgff",
+      "title": "第二篇测试文章",
+      "views": 10
+    },
+    {
+      "ids": "article_1fxfidxtcj",
+      "title": "第三篇测试文章",
+      "views": 10
+    }
+  ]
+})
+
+/**
+ * 点赞排行榜
+ */
+Mock.mock(`${BASE_URL}/article/popularlist`, 'get', {
+  "msg": "热门文章",
+  "state": 0,
+  "data": [
+    {
+      "ids": "article_irkyj84lgff",
+      "title": "第二篇测试文章",
+      "likes": 2
+    },
+    {
+      "ids": "article_c6rnbqh70jr",
+      "title": "阿里前端攻城狮们写了一份前端面试题答案，请查收",
+      "likes": 2
+    },
+    {
+      "ids": "article_rybzy55xc38",
+      "title": "另一个作者测试",
+      "likes": 1
+    },
+    {
+      "ids": "article_uyz0vounmc",
+      "title": "这是刚刚修改的文章",
+      "likes": 1
+    },
+    {
+      "ids": "article_1fxfidxtcj",
+      "title": "第三篇测试文章",
+      "likes": 0
+    },
+    {
+      "ids": "article_zjlyxps34i",
+      "title": "成为猛男后的第一篇文章",
+      "likes": 0
+    },
+    {
+      "ids": "article_oqmlxiq7jr",
+      "title": "测试时间",
+      "likes": 0
+    }
+  ]
+})
+
+/**
  * 登录状态下的个人信息
  */
 Mock.mock(`${BASE_URL}/user/personaldata`, 'get', {

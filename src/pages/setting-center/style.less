@@ -60,6 +60,7 @@
       }
 
       .action {
+        position: relative;
         float: left;
         margin-left: 10px;
 
@@ -67,7 +68,18 @@
           font-size: 13px;
         }
 
+        input[type="file"] {
+          position: absolute;
+          opacity: 0;
+          z-index: 100;
+          margin-top: 10px;
+          height: 32px;
+          width: 86px;
+          cursor: pointer;
+        }
+
         button {
+          position: absolute;
           margin-top: 10px;
         }
       }

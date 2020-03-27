@@ -5,7 +5,6 @@ import Footer from '../../components/Footer';
 import AsideItem from '../../components/AsideItem';
 import Suspended from './components/Suspended';
 import AuthorData from './components/AuthorData';
-import { AsideItemType } from '../../components/AsideItem/data';
 import { getArticleDetails, likeArticle, commentArticle } from './service';
 import { getAuthorPost } from '../user-center/service';
 import { message } from 'antd';
@@ -13,21 +12,7 @@ import './_mock';
 import '../user-center/_mock';
 import { getAuthorOtherArticles } from './util';
 import { ArticleCommentType, ArticleDetailsStateType } from './data';
-import { getPersonalData } from '../home-page/service';
-
-
-/**
- * 热点列表 
- */
-const HOT_ITEM1: AsideItemType[] = [
-  { ids: 'sakk21lks', title: '文章1' },
-  { ids: 'asfcadqwv', title: '文章2' },
-  { ids: 'laskdoi2k', title: '文章3' },
-  { ids: 'c9djqk3j3', title: '文章4' },
-  { ids: 'as39kjjid', title: '文章5' },
-  { ids: 'sakalo1ks', title: '文章6' },
-  { ids: 'aalao21la', title: '文章7' },
-];
+import { getPersonalData, getArticleHotList } from '../home-page/service';
 
 const BASE_URL = "http://127.0.0.1";
 
@@ -39,6 +24,8 @@ class ArticleDetails extends React.Component<any, ArticleDetailsStateType> {
       content: '',
       date: '',
       views: 0,
+      typeName: '',
+      tag: '',
       comments: [],
     },
     authorData: {
@@ -47,7 +34,10 @@ class ArticleDetails extends React.Component<any, ArticleDetailsStateType> {
       avatar: '',
       motto: '',
     },
+    // 该作者发布的其它文章
     authorOthers: [],
+    // 阅读量排行榜单
+    articleHotList: [],
     likes: 0,
     views: 0,
 
@@ -60,6 +50,27 @@ class ArticleDetails extends React.Component<any, ArticleDetailsStateType> {
   componentDidMount() {
     window.scrollTo(0, 0);
     const { params } = this.props.match;
+    // 获取阅读量排行榜
+    getArticleHotList().then((res: any) => {
+      this.setState({ articleHotList: res.data });
+    })
+    // 获取文章详情
+    this.getArticleDetailsAndOthers(params.ids);
+    // 获取当前登录人的信息
+    getPersonalData().then((res: any) => {
+      if (res.state === 302) {
+        this.setState({ isLogin: false });
+      } else {
+        this.setState({ isLogin: true, userAvatar: res.data.avatar });
+      }
+    })
+  }
+
+  /**
+   * 获取文章详情和作者其它信息
+   */
+  getArticleDetailsAndOthers = (articleIds: string) => {
+    const params = { ids: articleIds };
     getArticleDetails(params).then((res: any) => {
       if (res.state === 404) {
         this.props.history.push('/exception/404');
@@ -73,13 +84,6 @@ class ArticleDetails extends React.Component<any, ArticleDetailsStateType> {
           const authorOthers = getAuthorOtherArticles(res.data, params.ids);
           this.setState({ authorOthers, views: res.views, likes: res.likes });
         })
-      }
-    })
-    getPersonalData().then((res: any) => {
-      if (res.state === 302) {
-        this.setState({ isLogin: false });
-      } else {
-        this.setState({ isLogin: true, userAvatar: res.data.avatar });
       }
     })
   }
@@ -151,6 +155,8 @@ class ArticleDetails extends React.Component<any, ArticleDetailsStateType> {
             <div className="article-info">
               <span>发布于 {articleData.date}</span>
               <span>阅读 {articleData.views}</span>
+              <span>分类：{articleData.typeName}</span>
+              <span>标签：{articleData.tag}</span>
             </div>
             <div className="article"
               dangerouslySetInnerHTML={{ __html: articleData.content }}
@@ -185,7 +191,7 @@ class ArticleDetails extends React.Component<any, ArticleDetailsStateType> {
               <div className="comment-list">
                 {articleData.comments.length > 0 ?
                   articleData.comments.map((item: ArticleCommentType) => (
-                    <div className="item" key={item.date}>
+                    <div className="item" key={`${item.date}${item.username}`}>
                       <div className="avatar">
                         <img src={`${BASE_URL}${item.avatar}`} alt="" />
                       </div>
@@ -204,7 +210,7 @@ class ArticleDetails extends React.Component<any, ArticleDetailsStateType> {
           </article>
           <aside>
             <AuthorData userData={authorData} likes={this.state.likes} views={this.state.views} />
-            <AsideItem title="本周排行" list={HOT_ITEM1} />
+            <AsideItem title="阅读量排行榜" list={this.state.articleHotList} />
             {this.state.authorOthers.length > 0 &&
               <AsideItem title="作者发布的其它文章" list={this.state.authorOthers} />}
           </aside>

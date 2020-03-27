@@ -4,6 +4,7 @@ import { AsideItemType, AsideItemPropsType } from './data';
 import { Link } from 'react-router-dom';
 
 class AsideItem extends React.Component<AsideItemPropsType> {
+
   render() {
     const { list, title } = this.props;
 
@@ -13,7 +14,7 @@ class AsideItem extends React.Component<AsideItemPropsType> {
         <ul className="list">
           {list.map((item: AsideItemType) => (
             <li className="alone-ellipsis" key={item.ids}>
-              <i className="iconfont icon-right"></i><Link to={`/article/${item.ids}`}>{item.title}</Link>
+              <i className="iconfont icon-right"></i><Link to={`/article/${item.ids}`} target="_blank" >{item.title}</Link>
             </li>
           ))}
         </ul>
