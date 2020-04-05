@@ -38,7 +38,7 @@ class EditArticle extends React.Component<any, any> {
     getArticleDetails(params).then((res: any) => {
       const { articleData } = res;
       this.setState({
-        ids: articleData.ids,
+        ids: articleData._id,
         userIds: articleData.userIds,
         title: articleData.title,
         des: articleData.des,
@@ -128,7 +128,7 @@ class EditArticle extends React.Component<any, any> {
             />
           </div>
           <div className="action-bar">
-            <Link to={`/user/${this.state.userIds}`}>返回首页</Link>
+            <Link to={`/user/${this.state.userIds}`}>返回个人中心</Link>
             <Button type="primary" onClick={this.showModel}>确认修改</Button>
             <Modal
               title="修改文章"

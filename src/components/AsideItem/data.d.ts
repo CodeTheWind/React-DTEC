@@ -1,5 +1,5 @@
 export interface AsideItemType {
-  ids: string;
+  _id: string;
   title: string;
 }
 

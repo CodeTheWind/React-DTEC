@@ -29,7 +29,7 @@ class ArticleDetails extends React.Component<any, ArticleDetailsStateType> {
       comments: [],
     },
     authorData: {
-      ids: '',
+      _id: '',
       username: '',
       avatar: '',
       motto: '',

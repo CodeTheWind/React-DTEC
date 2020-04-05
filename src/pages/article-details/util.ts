@@ -10,7 +10,7 @@ export function getAuthorOtherArticles(articleList: ArticleItemType[], currentAr
   const COUNT: number = 7;
 
   articleList.forEach((item: ArticleItemType) => {
-    if (item.ids !== currentArticleIds) {
+    if (item._id !== currentArticleIds) {
       newArticleList.push(item);
     }
   })

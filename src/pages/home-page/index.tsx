@@ -37,7 +37,7 @@ class HomePage extends React.Component {
     articlePopularList: [],
     userData: {
       username: '',
-      ids: '',
+      _id: '',
       avatar: '',
       motto: ''
     },
@@ -254,11 +254,11 @@ class HomePage extends React.Component {
             {/* 文章列表 */}
             <div className="article-list">
               {this.state.articleList.map((item: ArticleItemType) => (
-                <div className="article-item" key={item.ids}>
+                <div className="article-item" key={item._id}>
                   <h2>{item.title}</h2>
                   <span>发布于 {item.date}</span>
                   <p className="multiple-ellipsis">{item.des}</p>
-                  <Link to={`/article/${item.ids}`}>continune reading</Link>
+                  <Link to={`/article/${item._id}`}>continune reading</Link>
                 </div>
               ))}
               {this.state.hasNextPage ?
@@ -276,13 +276,13 @@ class HomePage extends React.Component {
                         <img src={`${BASE_URL}${userData.avatar}`} alt="" />
                       </div>
                       <div className="info">
-                        <Link to={`/user/${userData.ids}`}>{userData.username}</Link>
+                        <Link to={`/user/${userData._id}`}>{userData.username}</Link>
                         <p className="alone-ellipsis">{userData.motto || '一句话介绍自己'}</p>
                       </div>
                     </div>
                     <div className="action-panel">
-                      <div className="action-item"><Link to={`/post/${userData.ids}`}>写文章</Link></div>
-                      <div className="action-item"><Link to={`/user/${userData.ids}`}>我的主页</Link></div>
+                      <div className="action-item"><Link to={`/post/${userData._id}`}>写文章</Link></div>
+                      <div className="action-item"><Link to={`/user/${userData._id}`}>我的主页</Link></div>
                       <div className="action-item" onClick={this.onLogout}>退出</div>
                     </div>
                   </section> :

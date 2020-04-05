@@ -13,8 +13,8 @@ class AsideItem extends React.Component<AsideItemPropsType> {
         <div className="title">{title}</div>
         <ul className="list">
           {list.map((item: AsideItemType) => (
-            <li className="alone-ellipsis" key={item.ids}>
-              <i className="iconfont icon-right"></i><Link to={`/article/${item.ids}`} target="_blank" >{item.title}</Link>
+            <li className="alone-ellipsis" key={item._id}>
+              <i className="iconfont icon-right"></i><Link to={`/article/${item._id}`} target="_blank" >{item.title}</Link>
             </li>
           ))}
         </ul>

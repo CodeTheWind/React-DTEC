@@ -66,7 +66,7 @@ class UserCenter extends React.Component<any, UserCenterStateType> {
   showOperationPanel = (ids: string) => {
     const { articleList } = this.state;
     articleList.forEach((item: ArticleItemType) => {
-      if (item.ids === ids) {
+      if (item._id === ids) {
         item.operation = true;
       } else {
         item.operation = false;
@@ -156,7 +156,7 @@ class UserCenter extends React.Component<any, UserCenterStateType> {
             <div className="dynamic-panel">
               {
                 articleList.map((item: ArticleItemType) => (
-                  <div className="dynamic" key={item.ids}>
+                  <div className="dynamic" key={item._id}>
                     <div className="base-info clearfix">
                       <div className="avatar">
                         <img src={`${BASE_URL}${userData.avatar}`} alt="" />
@@ -166,7 +166,7 @@ class UserCenter extends React.Component<any, UserCenterStateType> {
                         <p>{userData.profession || '暂无'}<span>·</span>{item.date}</p>
                       </div>
                     </div>
-                    <Link to={`/article/${item.ids}`} className="article">
+                    <Link to={`/article/${item._id}`} className="article">
                       <p className="title">
                         <span>{item.typeName}</span>
                         {item.title}
@@ -183,11 +183,11 @@ class UserCenter extends React.Component<any, UserCenterStateType> {
                       <div className="action-item">
                         <i className="iconfont icon-share"></i>分享
                       </div>
-                      {owner && <div className="action-item" onClick={(e) => { e.stopPropagation(); this.showOperationPanel(item.ids) }}>
+                      {owner && <div className="action-item" onClick={(e) => { e.stopPropagation(); this.showOperationPanel(item._id) }}>
                         <i className="iconfont icon-manage"></i>操作
                         {item.operation && <ul className="operation">
-                          <li onClick={() => this.updateArticle(item.ids)}>修改</li>
-                          <li onClick={() => this.deleteArticle(item.ids)}>删除</li>
+                          <li onClick={() => this.updateArticle(item._id)}>修改</li>
+                          <li onClick={() => this.deleteArticle(item._id)}>删除</li>
                         </ul>}
                       </div>}
                     </div>

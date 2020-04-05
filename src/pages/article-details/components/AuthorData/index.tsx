@@ -17,7 +17,7 @@ class AuthorData extends React.Component<AuthorDataPropsType> {
               <img src={`${BASE_URL}${userData.avatar}`} alt=""/>
             </div>
             <div className="info">
-              <Link to={`/user/${userData.ids}`}>{userData.username}</Link>
+              <Link to={`/user/${userData._id}`}>{userData.username}</Link>
               <p className="motto alone-ellipsis">{userData.motto || '作者暂时没有个性签名...'}</p>
             </div>
           </div>

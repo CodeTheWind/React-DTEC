@@ -43,7 +43,7 @@ export interface SuspendedPropsType {
 }
 
 export interface AuthorDataType {
-  ids: string;
+  _id: string;
   avatar: string;
   username: string;
   motto: string;

@@ -1,5 +1,5 @@
 export interface ArticleItemType {
-  ids: string;
+  _id: string;
   title: string;
   date: string;
   des: string;
@@ -22,7 +22,7 @@ export interface UserLoginParamsType {
 
 export interface UserDataType {
   username: string;
-  ids: string;
+  _id: string;
   avatar: string;
   motto: string;
 }
