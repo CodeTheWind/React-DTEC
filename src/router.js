@@ -11,6 +11,7 @@ const UserCenter = asyncComponent(() => import('./pages/user-center'));
 const PostArticle = asyncComponent(() => import('./pages/post-article'));
 const EditArticle = asyncComponent(() => import('./pages/edit-article'));
 const SettingCenter = asyncComponent(() => import('./pages/setting-center'));
+const BackStage = asyncComponent(() => import('./pages/backstage'));
 
 const Exception = asyncComponent(() => import('./pages/exception'));
 
@@ -23,6 +24,7 @@ const Router = () => (
       <Route exact path="/edit/:ids" component={EditArticle} />
       <Route exact path="/user/:ids" component={UserCenter} />
       <Route exact path="/user/setting/:type" component={SettingCenter} />
+      <Route path="/admin" component={BackStage} />
 
       <Route exact path="/exception/:code" component={Exception} />
     </Switch>

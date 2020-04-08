@@ -39,7 +39,8 @@ class HomePage extends React.Component {
       username: '',
       _id: '',
       avatar: '',
-      motto: ''
+      motto: '',
+      admin: false,
     },
   }
   /**
@@ -285,6 +286,10 @@ class HomePage extends React.Component {
                       <div className="action-item"><Link to={`/user/${userData._id}`}>我的主页</Link></div>
                       <div className="action-item" onClick={this.onLogout}>退出</div>
                     </div>
+                    {
+                      userData.admin &&
+                      <div className="backstage"><Link to={`/admin`}>进入后台</Link></div>
+                    }
                   </section> :
                   <section className="login">
                     <div className="title">
@@ -297,7 +302,6 @@ class HomePage extends React.Component {
                     </div>
                   </section>
               }
-
               <AsideItem title="阅读榜" list={this.state.articleHotList} />
               <AsideItem title="点赞榜" list={this.state.articlePopularList} />
             </aside>

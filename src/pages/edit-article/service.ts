@@ -1,4 +1,4 @@
-import { request } from '../../server/request';
+import { request } from '../../utils/request';
 
 /**
  * 修改文章

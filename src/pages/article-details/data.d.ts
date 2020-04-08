@@ -1,4 +1,5 @@
 interface ArticleType {
+  _id: string;
   ids?: string;
   title: string;
   des: string;
@@ -6,11 +7,11 @@ interface ArticleType {
   comments: ArticleCommentType[];
   date: string;
   views: number;
+  author: AuthorDataType;
 }
 
 export interface ArticleDetailsStateType {
   articleData: ArticleType;
-  authorData: any;
   authorOthers: any[];
   articleHotList: any[];
   likes: number;

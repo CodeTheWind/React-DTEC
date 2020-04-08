@@ -19,6 +19,7 @@ const BASE_URL = "http://127.0.0.1";
 class ArticleDetails extends React.Component<any, ArticleDetailsStateType> {
   state = {
     articleData: {
+      _id: '',
       title: '',
       des: '',
       content: '',
@@ -27,12 +28,12 @@ class ArticleDetails extends React.Component<any, ArticleDetailsStateType> {
       typeName: '',
       tag: '',
       comments: [],
-    },
-    authorData: {
-      _id: '',
-      username: '',
-      avatar: '',
-      motto: '',
+      author: {
+        _id: '',
+        username: '',
+        avatar: '',
+        motto: '',
+      },
     },
     // 该作者发布的其它文章
     authorOthers: [],
@@ -53,7 +54,7 @@ class ArticleDetails extends React.Component<any, ArticleDetailsStateType> {
     // 获取阅读量排行榜
     getArticleHotList().then((res: any) => {
       this.setState({ articleHotList: res.data });
-    })
+    });
     // 获取文章详情
     this.getArticleDetailsAndOthers(params.ids);
     // 获取当前登录人的信息
@@ -76,10 +77,9 @@ class ArticleDetails extends React.Component<any, ArticleDetailsStateType> {
         this.props.history.push('/exception/404');
       } else {
         this.setState({
-          articleData: res.articleData,
-          authorData: res.userData
+          articleData: res.data,
         });
-        const param = { ids: res.articleData.userIds };
+        const param = { ids: res.data.author._id };
         getAuthorPost(param).then((res: any) => {
           const authorOthers = getAuthorOtherArticles(res.data, params.ids);
           this.setState({ authorOthers, views: res.views, likes: res.likes });
@@ -144,7 +144,7 @@ class ArticleDetails extends React.Component<any, ArticleDetailsStateType> {
   }
 
   render() {
-    const { articleData, authorData } = this.state;
+    const { articleData } = this.state;
 
     return (
       <>
@@ -209,7 +209,7 @@ class ArticleDetails extends React.Component<any, ArticleDetailsStateType> {
             <Suspended onLike={this.onLikesArticle} />
           </article>
           <aside>
-            <AuthorData userData={authorData} likes={this.state.likes} views={this.state.views} />
+            <AuthorData userData={articleData.author} likes={this.state.likes} views={this.state.views} />
             <AsideItem title="阅读量排行榜" list={this.state.articleHotList} />
             {this.state.authorOthers.length > 0 &&
               <AsideItem title="作者发布的其它文章" list={this.state.authorOthers} />}

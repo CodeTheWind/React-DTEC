@@ -1,11 +1,12 @@
 import axios from 'axios';
 import qs from 'qs';
+import REQUEST_PATH from './requestPath';
 
 /**
  * 自定义实例默认值
  */
 const instance = axios.create({
-  baseURL: 'http://127.0.0.1',
+  baseURL: REQUEST_PATH,
   timeout: 5000, // 请求超时时间
   withCredentials: true,
 });
