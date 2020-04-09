@@ -1,14 +1,13 @@
 import React from 'react';
-import './style.less';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 import AsideItem from '../../components/AsideItem';
 import Suspended from './components/Suspended';
 import AuthorData from './components/AuthorData';
 import { message } from 'antd';
+import { Link } from 'react-router-dom';
 import { getAuthorOtherArticles } from './util';
 import { ArticleDetailsStateType } from './data';
-
 import {
   getArticleDetails,
   getArticleListOfType,
@@ -18,9 +17,10 @@ import {
   praiseArticle
 } from '../../services/article/service';
 import { getPersonalData } from '../../services/user/service';
-import { Link } from 'react-router-dom';
+import './style.less';
 
 const BASE_URL = "http://127.0.0.1";
+
 
 class ArticleDetails extends React.Component<any, ArticleDetailsStateType> {
   state = {
@@ -31,7 +31,10 @@ class ArticleDetails extends React.Component<any, ArticleDetailsStateType> {
       content: '',
       date: '',
       views: 0,
-      category: '',
+      category: {
+        typeId: '',
+        typeName: '',
+      },
       tags: [],
       author: {
         _id: '',
@@ -165,7 +168,7 @@ class ArticleDetails extends React.Component<any, ArticleDetailsStateType> {
             <div className="article-info">
               <span>发布于 {articleData.date}</span>
               <span>阅读 {articleData.views}</span>
-              <span>分类：{articleData.category}</span>
+              <span>分类：{articleData.category.typeName}</span>
               <span>标签：{articleData.tags.join(' ')}</span>
             </div>
             <div className="article"

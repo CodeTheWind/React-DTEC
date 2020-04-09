@@ -3,7 +3,7 @@ interface ArticleType {
   title: string;
   des: string;
   tags: string[];
-  category: string;
+  category: any;
   content: string;
   date: string;
   views: number;

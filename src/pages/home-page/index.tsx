@@ -1,11 +1,11 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import NavBar from '../../components/NavBar';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 import BackTop from '../../components/BackTop';
 import AsideItem from '../../components/AsideItem';
 import { Carousel, message } from 'antd';
+import { Link } from 'react-router-dom';
 import { ArticleItemType, ArticleListParamsType, UserLoginParamsType } from './data';
 import { isPhone, checkRegisterPassword } from './util';
 import { getCategoryList } from '../../services/category/service';

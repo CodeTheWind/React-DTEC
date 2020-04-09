@@ -1,14 +1,15 @@
 import React from 'react';
+import UserList from './user-list';
+import ArticleList from './article-list';
+import CategoryList from './category-list';
+import BannerList from './banner-list';
+import Default from './default';
 import { Layout, Menu, Icon } from 'antd';
 import { Route, Link } from 'react-router-dom';
 import { BackStoragePropsType, BackStorageStateType } from './data';
-import UserList from './components/user-list';
-import ArticleList from './components/article-list';
-import CategoryList from './components/category-list';
-import BannerList from './components/banner-list';
-import Default from './components/default';
-import './style.less';
 import { getPersonalData } from '../../services/user/service';
+import './style.less';
+
 
 const { SubMenu } = Menu;
 const { Header, Sider, Content, Footer } = Layout;
@@ -95,7 +96,7 @@ class BackStage extends React.Component<BackStoragePropsType, BackStorageStateTy
           <Header className="backstage-header">
             <div className="username">
               <span className="avatar">
-                <img src={`http://127.0.0.1${userData.avatar}`} alt={userData.username} />
+                <img src={`http://127.0.0.1${userData.avatar}`} alt="avatar" />
               </span>
               <span>{userData.username}</span>
             </div>

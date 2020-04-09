@@ -1,7 +1,8 @@
 import React from 'react';
 import { Breadcrumb, Popconfirm, Table, Button, message, Divider, Modal, Input } from 'antd';
-import { DelObjectParamsType } from '../../data';
-import { deleteObject, getCategoryList, newCategory } from '../../service';
+import { DelObjectParamsType } from '../data';
+import { getCategoryList } from '../../../services/category/service';
+import { addCategory, deleteObject } from '../../../services/admin/service';
 
 class CategoryList extends React.Component {
 
@@ -153,7 +154,7 @@ class CategoryList extends React.Component {
    */
   onConfirmAddCategory = () => {
     const params = { typeId: this.state.typeId, typeName: this.state.typeName };
-    newCategory(params).then((res: any) => {
+    addCategory(params).then((res: any) => {
       if (res.state === 200) {
         message.success('添加成功！', 1.5, () => {
           this.setState({ visible: false, typeId: '', typeName: '' });

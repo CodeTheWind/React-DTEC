@@ -1,16 +1,12 @@
 import React from 'react';
 import ReactQuill from 'react-quill'; // ES6
+import TypeRadio from '../post-article/components/TypeRadio';
+import { Button, Modal, message } from 'antd';
+import { Link } from 'react-router-dom';
+import { getArticleDetails, updateArticle } from '../../services/article/service';
+import { getCategoryList } from '../../services/category/service';
 import 'react-quill/dist/quill.snow.css';
 import '../post-article/style.less';
-import { Button, Modal, message } from 'antd';
-import TypeRadio from '../post-article/components/TypeRadio';
-import { updateArticle } from './service';
-import { Link } from 'react-router-dom';
-
-import { getArticleDetails } from '../../services/article/service';
-import { getCategoryList } from '../../services/category/service';
-
-
 
 
 class EditArticle extends React.Component<any, any> {
@@ -18,12 +14,13 @@ class EditArticle extends React.Component<any, any> {
   constructor(props: any) {
     super(props);
     this.state = {
+      ids: '',
       userIds: '',
       _id: '',
       title: '',
       des: '',
       content: '',
-      category: '',
+      category: {},
       tags: [],
       categoryList: [],
       visible: false,
@@ -39,11 +36,12 @@ class EditArticle extends React.Component<any, any> {
     const { params } = this.props.match;
     // 获取文章详情
     getArticleDetails(params).then((res: any) => {
-
       const { data } = res;
 
       this.setState({
         _id: data._id,
+        ids: data._id,
+        userIds: data.author._id,
         title: data.title,
         des: data.des,
         content: data.content,
@@ -70,11 +68,8 @@ class EditArticle extends React.Component<any, any> {
   onHandleTag = (e: any) => {
     this.setState({ tags: e.target.value.split(' ') });
   }
-  getTypeValue = (id: string, name: string) => {
-    this.setState({
-      typeId: id,
-      typeName: name
-    });
+  getTypeValue = (ids: string) => {
+    this.setState({ category: ids });
   }
   onHandleContent = (value: string) => {
     this.setState({ content: value });
@@ -98,8 +93,8 @@ class EditArticle extends React.Component<any, any> {
    * 修改文章
    */
   handleOk = () => {
-    const { userIds, ids, title, des, content, category, tags } = this.state;
-    const params = { userIds, ids, title, des, content, category, tags };
+    const { ids, title, des, content, category, tags } = this.state;
+    const params = { ids, title, des, content, category, tags };
 
     this.setState({ confirmLoading: true });
     setTimeout(() => {
@@ -108,7 +103,7 @@ class EditArticle extends React.Component<any, any> {
         confirmLoading: false,
       }, () => {
         updateArticle(params).then((res: any) => {
-          if (!res.state) {
+          if (res.state === 200) {
             message.success('修改成功！', 1.5, () => {
               this.props.history.push(`/article/${res.ids}`);
             })
@@ -122,7 +117,7 @@ class EditArticle extends React.Component<any, any> {
 
   render() {
     const tags = this.state.tags.join(' ');
- 
+
     return (
       <main className="main">
         <div className="title">
@@ -150,8 +145,8 @@ class EditArticle extends React.Component<any, any> {
                 {this.state.categoryList.map((item: any) => (
                   <TypeRadio
                     key={item.typeId}
-                    id={item.typeId}
-                    defaultChecked={item.typeId === this.state.typeId ? true : false}
+                    id={item._id}
+                    defaultChecked={item.typeId === this.state.category.typeId ? true : false}
                     value={item.typeName}
                     name="分类"
                     getTypeValue={this.getTypeValue}

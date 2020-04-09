@@ -1,15 +1,14 @@
 import React from 'react';
-import './style.less';
 import Header from '../../components/Header';
 import SettingNav from './components/SetingNav';
 import EditProfile from './components/EditProfile';
 import UpdatePassword from './components/UpdatePassword';
-
-import { getPersonalData } from '../../services/user/service';
-import { ProfileType, UpdatePasswordParamsType, UpdateAvatarParamsType } from './data';
 import { message } from 'antd';
-
+import { ProfileType, UpdatePasswordParamsType, UpdateAvatarParamsType } from './data';
+import { getPersonalData } from '../../services/user/service';
 import { uploadAvatar, updateUserData, updatePassword, updateAvatar } from '../../services/user/service';
+import './style.less';
+
 
 class SettingCenter extends React.Component<any, ProfileType> {
   state = {

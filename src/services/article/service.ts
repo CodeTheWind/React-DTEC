@@ -10,7 +10,7 @@ import {
  * 获取文章列表
  * @param params 关键字keyword、分类typeId、页码page、每页条数count
  */
-export function getArticleList(params: GetArticleParamsParamsType) {
+const getArticleList = (params: GetArticleParamsParamsType) => {
   return request.get('/article/get/list', params);
 }
 
@@ -18,7 +18,7 @@ export function getArticleList(params: GetArticleParamsParamsType) {
  * 获取特殊类型的文章列表
  * @param type 榜单类型（目前仅支持 hot、popular）
  */
-export function getArticleListOfType(type: string) {
+const getArticleListOfType = (type: string) => {
   return request.get(`/article/get/list/${type}`, {});
 }
 
@@ -26,7 +26,7 @@ export function getArticleListOfType(type: string) {
  * 获取指定用户（_id）发布过的文章列表
  * @param params 用户_id
  */
-export function getArticleListOfUser(params: GetArticleDataParamsType) {
+const getArticleListOfUser = (params: GetArticleDataParamsType) => {
   return request.get('/article/get/list/user', params);
 }
 
@@ -34,7 +34,7 @@ export function getArticleListOfUser(params: GetArticleDataParamsType) {
  * 获取文章详情
  * @param params 文章_id
  */
-export function getArticleDetails(params: GetArticleDataParamsType) {
+const getArticleDetails = (params: GetArticleDataParamsType) => {
   return request.get('/article/get/details', params);
 }
 
@@ -42,7 +42,7 @@ export function getArticleDetails(params: GetArticleDataParamsType) {
  * 获取文章评论
  * @param params 文章_id
  */
-export function getArticleComments(params: GetArticleDataParamsType) {
+const getArticleComments = (params: GetArticleDataParamsType) => {
   return request.get('/article/get/comments', params);
 }
 
@@ -50,7 +50,7 @@ export function getArticleComments(params: GetArticleDataParamsType) {
  * 评论文章
  * @param params 文章_id 、 评论内容content
  */
-export function addArticleComment(params: AddCommentParamsType) {
+const addArticleComment = (params: AddCommentParamsType) => {
   return request.post('/article/add/comment', params);
 }
 
@@ -58,7 +58,7 @@ export function addArticleComment(params: AddCommentParamsType) {
  * 点赞文章
  * @param params 文章_id
  */
-export function praiseArticle(params: GetArticleDataParamsType) {
+const praiseArticle = (params: GetArticleDataParamsType) => {
   return request.post('/article/update/likes', params);
 }
 
@@ -66,7 +66,7 @@ export function praiseArticle(params: GetArticleDataParamsType) {
  * 发表文章
  * @param params 文章字段
  */
-export function addArticle(params: AddArticleParamsType) {
+const addArticle = (params: AddArticleParamsType) => {
   return request.post('/article/add', params);
 }
 
@@ -74,7 +74,7 @@ export function addArticle(params: AddArticleParamsType) {
  * 修改文章
  * @param params 文章字段
  */
-export function updateArticle(params: AddArticleParamsType) {
+const updateArticle = (params: AddArticleParamsType) => {
   return request.post('/article/update', params);
 }
 
@@ -82,6 +82,19 @@ export function updateArticle(params: AddArticleParamsType) {
  * 删除文章
  * @param params 文章_id
  */
-export function deleteArticle(params: GetArticleDataParamsType) {
+const deleteArticle = (params: GetArticleDataParamsType) => {
   return request.post('/article/delete', params);
+}
+
+export {
+  getArticleList,
+  getArticleListOfUser,
+  getArticleListOfType,
+  getArticleDetails,
+  getArticleComments,
+  addArticle,
+  addArticleComment,
+  praiseArticle,
+  updateArticle,
+  deleteArticle,
 }

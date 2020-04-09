@@ -1,14 +1,13 @@
 import React from 'react';
-import './style.less';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
+import { message } from 'antd';
 import { Link } from 'react-router-dom';
 import { UserCenterStateType, ParamsType } from './data';
 import { ArticleItemType } from '../home-page/data';
-import { message } from 'antd';
-
 import { getUserData } from '../../services/user/service';
 import { getArticleListOfUser, deleteArticle } from '../../services/article/service';
+import './style.less';
 
 const BASE_URL = "http://127.0.0.1";
 

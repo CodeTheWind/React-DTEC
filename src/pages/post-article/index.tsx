@@ -1,13 +1,13 @@
 import React from 'react';
-import ReactQuill from 'react-quill'; // ES6
-import 'react-quill/dist/quill.snow.css';
-import './style.less';
-import { Button, Modal, message } from 'antd';
+import ReactQuill from 'react-quill';
 import TypeRadio from './components/TypeRadio';
+import { Button, Modal, message } from 'antd';
 import { Link } from 'react-router-dom';
-
 import { getCategoryList } from '../../services/category/service';
 import { addArticle } from '../../services/article/service';
+import 'react-quill/dist/quill.snow.css';
+import './style.less';
+
 
 class PostArticle extends React.Component<any, any> {
 

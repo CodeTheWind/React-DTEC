@@ -1,11 +1,10 @@
 import React from 'react';
 import { Breadcrumb, Table, Popconfirm, message, Button, Modal, Input } from 'antd';
-import { getUserList, deleteObject } from '../../service';
-import { DelObjectParamsType } from '../../data';
-import { UserLoginParamsType } from '../../../home-page/data';
-import { isPhone } from '../../../home-page/util';
-import { register } from '../../../../services/user/service';
-import '../../_mock';
+import { DelObjectParamsType } from '../data';
+import { UserLoginParamsType } from '../../home-page/data';
+import { isPhone } from '../../home-page/util';
+import { register } from '../../../services/user/service';
+import { getUserList, deleteObject } from '../../../services/admin/service';
 
 class UserList extends React.Component {
 
