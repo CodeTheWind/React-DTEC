@@ -4,6 +4,7 @@ import 'antd/dist/antd.css';
 import './styles/normalize.less';
 import Router from './router';
 import * as serviceWorker from './serviceWorker';
+import './mock/mock';
 
 ReactDOM.render(<Router />, document.getElementById('root'));
 

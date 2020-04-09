@@ -5,14 +5,20 @@ import Footer from '../../components/Footer';
 import AsideItem from '../../components/AsideItem';
 import Suspended from './components/Suspended';
 import AuthorData from './components/AuthorData';
-import { getArticleDetails, likeArticle, commentArticle } from './service';
-import { getAuthorPost } from '../user-center/service';
 import { message } from 'antd';
-import './_mock';
-import '../user-center/_mock';
 import { getAuthorOtherArticles } from './util';
-import { ArticleCommentType, ArticleDetailsStateType } from './data';
-import { getPersonalData, getArticleHotList } from '../home-page/service';
+import { ArticleDetailsStateType } from './data';
+
+import {
+  getArticleDetails,
+  getArticleListOfType,
+  getArticleListOfUser,
+  getArticleComments,
+  addArticleComment,
+  praiseArticle
+} from '../../services/article/service';
+import { getPersonalData } from '../../services/user/service';
+import { Link } from 'react-router-dom';
 
 const BASE_URL = "http://127.0.0.1";
 
@@ -25,9 +31,8 @@ class ArticleDetails extends React.Component<any, ArticleDetailsStateType> {
       content: '',
       date: '',
       views: 0,
-      typeName: '',
-      tag: '',
-      comments: [],
+      category: '',
+      tags: [],
       author: {
         _id: '',
         username: '',
@@ -35,6 +40,8 @@ class ArticleDetails extends React.Component<any, ArticleDetailsStateType> {
         motto: '',
       },
     },
+    commentList: [],
+
     // 该作者发布的其它文章
     authorOthers: [],
     // 阅读量排行榜单
@@ -52,11 +59,13 @@ class ArticleDetails extends React.Component<any, ArticleDetailsStateType> {
     window.scrollTo(0, 0);
     const { params } = this.props.match;
     // 获取阅读量排行榜
-    getArticleHotList().then((res: any) => {
+    getArticleListOfType('hot').then((res: any) => {
       this.setState({ articleHotList: res.data });
     });
     // 获取文章详情
-    this.getArticleDetailsAndOthers(params.ids);
+    this.getArticleDetails(params.ids);
+    // 获取文章评论
+    this.getArticleComments(params.ids);
     // 获取当前登录人的信息
     getPersonalData().then((res: any) => {
       if (res.state === 302) {
@@ -68,23 +77,31 @@ class ArticleDetails extends React.Component<any, ArticleDetailsStateType> {
   }
 
   /**
-   * 获取文章详情和作者其它信息
+   * 获取文章详情和作者发布的其它文章
    */
-  getArticleDetailsAndOthers = (articleIds: string) => {
-    const params = { ids: articleIds };
+  getArticleDetails = (ids: string) => {
+    const params = { ids };
     getArticleDetails(params).then((res: any) => {
       if (res.state === 404) {
         this.props.history.push('/exception/404');
       } else {
-        this.setState({
-          articleData: res.data,
+        this.setState({ articleData: res.data }, () => {
+          const params = { ids: this.state.articleData.author._id };
+          getArticleListOfUser(params).then(res => {
+            this.setState({ authorOthers: res.data });
+          })
         });
-        const param = { ids: res.data.author._id };
-        getAuthorPost(param).then((res: any) => {
-          const authorOthers = getAuthorOtherArticles(res.data, params.ids);
-          this.setState({ authorOthers, views: res.views, likes: res.likes });
-        })
       }
+    })
+  }
+
+  /**
+   * 获取文章评论
+   */
+  getArticleComments = (ids: string) => {
+    const params = { ids };
+    getArticleComments(params).then((res) => {
+      this.setState({ commentList: res.data });
     })
   }
 
@@ -94,7 +111,6 @@ class ArticleDetails extends React.Component<any, ArticleDetailsStateType> {
   onHandleConmment = (e: any) => {
     this.setState({ comment: e.target.value });
   }
-
   onFocusInput = () => {
     this.setState({ submitFlag: true });
   }
@@ -109,7 +125,7 @@ class ArticleDetails extends React.Component<any, ArticleDetailsStateType> {
    */
   onLikesArticle = () => {
     const { params } = this.props.match;
-    likeArticle(params).then((res: any) => {
+    praiseArticle(params).then((res: any) => {
       if (!res.state) {
         message.success(res.msg, 1.5);
       } else {
@@ -122,20 +138,13 @@ class ArticleDetails extends React.Component<any, ArticleDetailsStateType> {
    * 评论文章
    */
   onCommentArticle = () => {
-    const params = { ids: this.props.match.params.ids, comment: this.state.comment };
+    const params = { ids: this.state.articleData._id, content: this.state.comment };
 
-    commentArticle(params).then((res: any) => {
-      if (res.state === 0) {
+    addArticleComment(params).then((res: any) => {
+      if (res.state === 200) {
         this.setState({ comment: '', submitFlag: false });
         message.success(res.msg, 1.5, () => {
-          const { params } = this.props.match;
-          getArticleDetails(params).then((res: any) => {
-            if (res.state === 404) {
-              this.props.history.push('/exception/404');
-            } else {
-              this.setState({ articleData: res.articleData });
-            }
-          })
+          this.getArticleComments(params.ids);
         });
       } else {
         message.error(res.msg, 1.5);
@@ -144,7 +153,8 @@ class ArticleDetails extends React.Component<any, ArticleDetailsStateType> {
   }
 
   render() {
-    const { articleData } = this.state;
+    const { articleData, commentList, authorOthers } = this.state;
+    const otherArticles = getAuthorOtherArticles(authorOthers, articleData._id);
 
     return (
       <>
@@ -155,8 +165,8 @@ class ArticleDetails extends React.Component<any, ArticleDetailsStateType> {
             <div className="article-info">
               <span>发布于 {articleData.date}</span>
               <span>阅读 {articleData.views}</span>
-              <span>分类：{articleData.typeName}</span>
-              <span>标签：{articleData.tag}</span>
+              <span>分类：{articleData.category}</span>
+              <span>标签：{articleData.tags.join(' ')}</span>
             </div>
             <div className="article"
               dangerouslySetInnerHTML={{ __html: articleData.content }}
@@ -189,15 +199,19 @@ class ArticleDetails extends React.Component<any, ArticleDetailsStateType> {
               }
 
               <div className="comment-list">
-                {articleData.comments.length > 0 ?
-                  articleData.comments.map((item: ArticleCommentType) => (
-                    <div className="item" key={`${item.date}${item.username}`}>
+                {commentList.length > 0 ?
+                  commentList.map((item: any) => (
+                    <div className="item" key={`${item.date}${item.user.username}`}>
                       <div className="avatar">
-                        <img src={`${BASE_URL}${item.avatar}`} alt="" />
+                        <Link to={`/user/${item.user._id}`} target="blank">
+                          <img src={`${BASE_URL}${item.user.avatar}`} alt="" />
+                        </Link>
                       </div>
                       <div className="item-content">
-                        <p>{item.username}</p>
-                        <p>{item.content}</p>
+                        <p>
+                          <Link to={`/user/${item.user._id}`} className="username" target="blank">{item.user.username}</Link>
+                        </p>
+                        <p className="comment">{item.content}</p>
                         <p className="date">{item.date}</p>
                       </div>
                     </div>
@@ -211,8 +225,8 @@ class ArticleDetails extends React.Component<any, ArticleDetailsStateType> {
           <aside>
             <AuthorData userData={articleData.author} likes={this.state.likes} views={this.state.views} />
             <AsideItem title="阅读量排行榜" list={this.state.articleHotList} />
-            {this.state.authorOthers.length > 0 &&
-              <AsideItem title="作者发布的其它文章" list={this.state.authorOthers} />}
+            {otherArticles.length > 0 &&
+              <AsideItem title="作者发布的其它文章" list={otherArticles} />}
           </aside>
         </main>
         <Footer />

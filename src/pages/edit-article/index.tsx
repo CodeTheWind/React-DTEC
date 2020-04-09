@@ -5,9 +5,13 @@ import '../post-article/style.less';
 import { Button, Modal, message } from 'antd';
 import TypeRadio from '../post-article/components/TypeRadio';
 import { updateArticle } from './service';
-import { getArticleCategory } from '../home-page/service';
-import { getArticleDetails } from '../article-details/service';
 import { Link } from 'react-router-dom';
+
+import { getArticleDetails } from '../../services/article/service';
+import { getCategoryList } from '../../services/category/service';
+
+
+
 
 class EditArticle extends React.Component<any, any> {
 
@@ -15,14 +19,13 @@ class EditArticle extends React.Component<any, any> {
     super(props);
     this.state = {
       userIds: '',
-      ids: '',
+      _id: '',
       title: '',
       des: '',
       content: '',
-      typeId: '',
-      typeName: '',
-      tag: '',
-      typeList: [],
+      category: '',
+      tags: [],
+      categoryList: [],
       visible: false,
       confirmLoading: false,
     }
@@ -36,21 +39,22 @@ class EditArticle extends React.Component<any, any> {
     const { params } = this.props.match;
     // 获取文章详情
     getArticleDetails(params).then((res: any) => {
-      const { articleData } = res;
+
+      const { data } = res;
+
       this.setState({
-        ids: articleData._id,
-        userIds: articleData.userIds,
-        title: articleData.title,
-        des: articleData.des,
-        content: articleData.content,
-        typeId: articleData.typeId,
-        typeName: articleData.typeName,
-        tag: articleData.tag,
-      })
+        _id: data._id,
+        title: data.title,
+        des: data.des,
+        content: data.content,
+        tags: data.tags,
+        category: data.category,
+      });
     });
-    // 获取分类选项
-    getArticleCategory().then((res: any) => {
-      this.setState({ typeList: res.data });
+
+    //获取分类选项
+    getCategoryList().then((res: any) => {
+      this.setState({ categoryList: res.data });
     })
   }
 
@@ -64,7 +68,7 @@ class EditArticle extends React.Component<any, any> {
     this.setState({ des: e.target.value });
   }
   onHandleTag = (e: any) => {
-    this.setState({ tag: e.target.value });
+    this.setState({ tags: e.target.value.split(' ') });
   }
   getTypeValue = (id: string, name: string) => {
     this.setState({
@@ -94,8 +98,8 @@ class EditArticle extends React.Component<any, any> {
    * 修改文章
    */
   handleOk = () => {
-    const { userIds, ids, title, des, content, typeId, typeName, tag } = this.state;
-    const params = { userIds, ids, title, des, content, typeId, typeName, tag };
+    const { userIds, ids, title, des, content, category, tags } = this.state;
+    const params = { userIds, ids, title, des, content, category, tags };
 
     this.setState({ confirmLoading: true });
     setTimeout(() => {
@@ -117,6 +121,8 @@ class EditArticle extends React.Component<any, any> {
   };
 
   render() {
+    const tags = this.state.tags.join(' ');
+ 
     return (
       <main className="main">
         <div className="title">
@@ -141,7 +147,7 @@ class EditArticle extends React.Component<any, any> {
             >
               <div className="row">
                 <h3>分类</h3>
-                {this.state.typeList.map((item: any) => (
+                {this.state.categoryList.map((item: any) => (
                   <TypeRadio
                     key={item.typeId}
                     id={item.typeId}
@@ -155,8 +161,8 @@ class EditArticle extends React.Component<any, any> {
               <div className="row">
                 <h3>标签</h3>
                 <input type="text"
-                  placeholder="添加一个标签"
-                  value={this.state.tag}
+                  placeholder="添加一个或多个标签（多个标签之间用空格隔开）"
+                  value={tags}
                   onChange={this.onHandleTag}
                 />
               </div>

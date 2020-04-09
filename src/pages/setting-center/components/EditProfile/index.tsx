@@ -25,8 +25,6 @@ class EditProfile extends React.Component<EditProfilePropsType, any> {
   upLoadImg = (e: any) => {
     let file = e.target.files[0];
 
-    console.log(file.size);
-
     if (file.size > 1024 * 1024 * 2) {
       message.error('图片过大， 请重新上传！', 2);
     } else {

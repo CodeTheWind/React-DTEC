@@ -3,11 +3,12 @@ import './style.less';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 import { Link } from 'react-router-dom';
-import { getAuthorData, getAuthorPost, deleteArticle } from './service';
 import { UserCenterStateType, ParamsType } from './data';
 import { ArticleItemType } from '../home-page/data';
 import { message } from 'antd';
-import './_mock';
+
+import { getUserData } from '../../services/user/service';
+import { getArticleListOfUser, deleteArticle } from '../../services/article/service';
 
 const BASE_URL = "http://127.0.0.1";
 
@@ -33,7 +34,7 @@ class UserCenter extends React.Component<any, UserCenterStateType> {
 
   componentDidMount() {
     const { params } = this.props.match;
-    getAuthorData(params).then((res: any) => {
+    getUserData(params).then((res: any) => {
       // 用户不存在
       if (res.state === 404) {
         this.props.history.push('/exception/404');
@@ -52,7 +53,7 @@ class UserCenter extends React.Component<any, UserCenterStateType> {
    * 获取用户发布的文章
    */
   getUserPost = (params: ParamsType) => {
-    getAuthorPost(params).then((res: any) => {
+    getArticleListOfUser(params).then((res: any) => {
       res.data.forEach((item: ArticleItemType) => {
         item.operation = false;
       });
@@ -168,7 +169,7 @@ class UserCenter extends React.Component<any, UserCenterStateType> {
                     </div>
                     <Link to={`/article/${item._id}`} className="article">
                       <p className="title">
-                        <span>{item.typeName}</span>
+                        <span>{item.category}</span>
                         {item.title}
                       </p>
                       <p className="desc">{item.des}</p>

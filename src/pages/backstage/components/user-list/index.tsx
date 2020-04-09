@@ -4,7 +4,7 @@ import { getUserList, deleteObject } from '../../service';
 import { DelObjectParamsType } from '../../data';
 import { UserLoginParamsType } from '../../../home-page/data';
 import { isPhone } from '../../../home-page/util';
-import { userRegister } from '../../../home-page/service';
+import { register } from '../../../../services/user/service';
 import '../../_mock';
 
 class UserList extends React.Component {
@@ -151,7 +151,7 @@ class UserList extends React.Component {
       password: this.state.password,
     };
     if (isPhone(params.tel)) {
-      userRegister(params).then((res: any) => {
+      register(params).then((res: any) => {
         if (res.state === 0) {
           message.success('新增成功！', 1.5, () => {
             this.setState({ visible: false, tel: '', password: '' });

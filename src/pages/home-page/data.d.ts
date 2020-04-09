@@ -3,7 +3,7 @@ export interface ArticleItemType {
   title: string;
   date: string;
   des: string;
-  typeName: string;
+  category: string;
   likes: number;
   comments?: [];
   operation?: boolean;

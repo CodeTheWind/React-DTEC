@@ -1,10 +1,10 @@
 interface ArticleType {
   _id: string;
-  ids?: string;
   title: string;
   des: string;
+  tags: string[];
+  category: string;
   content: string;
-  comments: ArticleCommentType[];
   date: string;
   views: number;
   author: AuthorDataType;
@@ -20,6 +20,7 @@ export interface ArticleDetailsStateType {
   comment: string;
   submitFlag: boolean;
   isLogin: boolean;
+  commentList: any[];
 }
 
 export interface ArticleCommentType {

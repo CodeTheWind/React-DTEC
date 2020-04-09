@@ -4,11 +4,12 @@ import Header from '../../components/Header';
 import SettingNav from './components/SetingNav';
 import EditProfile from './components/EditProfile';
 import UpdatePassword from './components/UpdatePassword';
-import { postAvatar, editProfile, updatePassword, editAvatar } from './service';
-import { getPersonalData } from '../home-page/service';
+
+import { getPersonalData } from '../../services/user/service';
 import { ProfileType, UpdatePasswordParamsType, UpdateAvatarParamsType } from './data';
 import { message } from 'antd';
-import '../home-page/_mock';
+
+import { uploadAvatar, updateUserData, updatePassword, updateAvatar } from '../../services/user/service';
 
 class SettingCenter extends React.Component<any, ProfileType> {
   state = {
@@ -53,10 +54,10 @@ class SettingCenter extends React.Component<any, ProfileType> {
    * 上传头像并修改
    */
   upLoadImg = (params: any) => {
-    postAvatar(params).then(res => {
+    uploadAvatar(params).then(res => {
       this.setState({ avatar: res.data.path });
       const params: UpdateAvatarParamsType = { avatar: res.data.path };
-      editAvatar(params).then((res: any) => {
+      updateAvatar(params).then((res: any) => {
         if (res.state === 200) {
           message.success('头像已更新！', 2);
         } else {
@@ -70,7 +71,7 @@ class SettingCenter extends React.Component<any, ProfileType> {
    * 保存修改个人资料
    */
   onSaveProfile = (params: ProfileType) => {
-    editProfile(params).then((res: any) => {
+    updateUserData(params).then((res: any) => {
       if (!res.state) {
         message.success('修改成功！', 1.5);
       } else {

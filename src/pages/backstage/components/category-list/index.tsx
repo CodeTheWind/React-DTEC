@@ -2,7 +2,6 @@ import React from 'react';
 import { Breadcrumb, Popconfirm, Table, Button, message, Divider, Modal, Input } from 'antd';
 import { DelObjectParamsType } from '../../data';
 import { deleteObject, getCategoryList, newCategory } from '../../service';
-import '../../../home-page/_mock'
 
 class CategoryList extends React.Component {
 

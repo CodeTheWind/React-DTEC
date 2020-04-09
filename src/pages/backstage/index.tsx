@@ -8,8 +8,7 @@ import CategoryList from './components/category-list';
 import BannerList from './components/banner-list';
 import Default from './components/default';
 import './style.less';
-import { getPersonalData } from '../home-page/service';
-import '../../mock/mock.ts';
+import { getPersonalData } from '../../services/user/service';
 
 const { SubMenu } = Menu;
 const { Header, Sider, Content, Footer } = Layout;

@@ -1,5 +1,5 @@
 import React from 'react';
-import './style.less';
+import { Link } from 'react-router-dom';
 import NavBar from '../../components/NavBar';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
@@ -7,10 +7,11 @@ import BackTop from '../../components/BackTop';
 import AsideItem from '../../components/AsideItem';
 import { Carousel, message } from 'antd';
 import { ArticleItemType, ArticleListParamsType, UserLoginParamsType } from './data';
-import { getArticleCategory, getArticleList, userRegister, userLogin, userLogout, getPersonalData, getArticleHotList, getArticlePopularList } from './service';
-import { Link } from 'react-router-dom';
 import { isPhone, checkRegisterPassword } from './util';
-import './_mock';
+import { getCategoryList } from '../../services/category/service';
+import { getArticleList, getArticleListOfType } from '../../services/article/service';
+import { login, logout, register, getPersonalData } from '../../services/user/service';
+import './style.less';
 
 const BASE_URL = "http://127.0.0.1";
 
@@ -47,47 +48,53 @@ class HomePage extends React.Component {
    * 初始加载文章分类列表和文章列表、用户信息
    */
   componentDidMount() {
-    this.getUserData();
-    this.getArticleData();
-    getArticleCategory().then((res: any) => {
+    this.getPersonalData();
+    this.getArticleList();
+
+    getCategoryList().then((res: any) => {
       res.data.unshift({ typeName: '全部', typeId: 0 });
       this.setState({ typeList: res.data });
     });
-    getArticleHotList().then((res: any) => {
+
+    getArticleListOfType('hot').then((res: any) => {
       this.setState({ articleHotList: res.data });
     });
-    getArticlePopularList().then((res: any) => {
+
+    getArticleListOfType('popular').then((res: any) => {
       this.setState({ articlePopularList: res.data });
     })
   }
+
   /**
    * 获取用户信息
    */
-  getUserData = () => {
+  getPersonalData = () => {
     getPersonalData().then((res: any) => {
       if (res.state !== 302) {
         this.setState({ isLogin: true, userData: res.data });
       }
     })
   }
+
   /**
    * 获取文章列表
    */
-  getArticleData = () => {
+  getArticleList = () => {
     getArticleList(this.articleListParams).then((res: any) => {
-      if (res.data.length <= 10) {
+      if (res.data.length < 10) {
         this.setState({ hasNextPage: false })
       }
       this.setState({ articleList: res.data });
     })
   }
+
   /**
    * 搜索文章
    */
   onSearchArticle = (keyword: string) => {
     this.articleListParams.keyword = keyword;
     this.articleListParams.page = 1;
-    this.getArticleData();
+    this.getArticleList();
   }
   /**
    * 筛选分类文章
@@ -95,7 +102,7 @@ class HomePage extends React.Component {
   onScreenArticle = (typeId: number) => {
     this.articleListParams.typeId = typeId;
     this.articleListParams.page = 1;
-    this.getArticleData();
+    this.getArticleList();
   }
   /**
    * 加载更多
@@ -118,7 +125,6 @@ class HomePage extends React.Component {
   onShowRegisterWindow = () => {
     this.setState({ registerWindowFlag: true });
   }
-
   /**
    * 关闭登录弹窗
    */
@@ -132,19 +138,15 @@ class HomePage extends React.Component {
   onBindLphone = (e: any) => {
     this.setState({ lphone: e.target.value });
   }
-
   onBindLpasswd = (e: any) => {
     this.setState({ lpasswd: e.target.value });
   }
-
   onBindRphone = (e: any) => {
     this.setState({ rphone: e.target.value });
   }
-
   onBindRpasswd = (e: any) => {
     this.setState({ rpasswd: e.target.value });
   }
-
   onBindRcpasswd = (e: any) => {
     this.setState({ rcpasswd: e.target.value });
   }
@@ -159,10 +161,10 @@ class HomePage extends React.Component {
       if (isPhone(lphone)) {
         if (lpasswd !== '') {
           message.loading('登录中', 2, () => {
-            userLogin(params).then((res: any) => {
+            login(params).then((res: any) => {
               if (res.state === 0) {
                 message.success('登录成功！', 1);
-                this.getUserData();
+                this.getPersonalData();
               } else {
                 message.error(res.msg);
               }
@@ -189,7 +191,7 @@ class HomePage extends React.Component {
     if (isPhone(rphone)) {
       switch (checkRegisterPassword(rpasswd, rcpasswd)) {
         case 0:
-          userRegister(params).then((res: any) => {
+          register(params).then((res: any) => {
             if (res.state === 0) {
               message.success('注册成功，快去登录吧！', 2);
               this.setState({ registerWindowFlag: false });
@@ -214,7 +216,7 @@ class HomePage extends React.Component {
    * 退出登录
    */
   onLogout = () => {
-    userLogout().then((res: any) => {
+    logout().then((res: any) => {
       if (res.state === 0) {
         this.setState({ isLogin: false });
       }
