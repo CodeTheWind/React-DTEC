@@ -1,6 +1,6 @@
 import { request } from '../request';
 import {
-  GetArticleParamsParamsType,
+  GetArticleListParamsType,
   GetArticleDataParamsType,
   AddCommentParamsType,
   AddArticleParamsType,
@@ -10,7 +10,7 @@ import {
  * 获取文章列表
  * @param params 关键字keyword、分类typeId、页码page、每页条数count
  */
-const getArticleList = (params: GetArticleParamsParamsType) => {
+const getArticleList = (params: GetArticleListParamsType) => {
   return request.get('/article/get/list', params);
 }
 

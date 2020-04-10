@@ -5,6 +5,7 @@ import { UserLoginParamsType } from '../../home-page/data';
 import { isPhone } from '../../home-page/util';
 import { register } from '../../../services/user/service';
 import { getUserList, deleteObject } from '../../../services/admin/service';
+import { GetUserListPramasType } from '../../../services/admin/data';
 
 class UserList extends React.Component {
 
@@ -49,25 +50,35 @@ class UserList extends React.Component {
     },
   ];
 
+  private params: GetUserListPramasType = {
+    page: 1,
+  }
+
   state = {
+    userList: [],
     loading: true,
     visible: false,
     selectedDataIds: [],
-    userData: [],
+    pagination: {
+      total: 0
+    },
     tel: '',
     password: '',
   }
 
   componentDidMount = () => {
-    this.getUserData();
+    this.getUserList();
   }
 
   /**
    * 获取用户数据
    */
-  getUserData = () => {
-    getUserList().then((res: any) => {
-      this.setState({ userData: res.data, loading: false });
+  getUserList = () => {
+    getUserList(this.params).then((res: any) => {
+      let { userList, pagination } = this.state;
+      userList = res.data;
+      pagination.total = res.total;
+      this.setState({ userList, pagination, loading: false });
     })
   }
 
@@ -78,7 +89,7 @@ class UserList extends React.Component {
     deleteObject(params, 'user').then((res: any) => {
       if (res.state === 200) {
         message.success('删除成功！', 2);
-        this.getUserData();
+        this.getUserList();
       } else {
         message.error(res.msg);
       }
@@ -106,6 +117,14 @@ class UserList extends React.Component {
   onSelectChange = (selectedDataIds: number[] | string[]) => {
     this.setState({ selectedDataIds });
   };
+
+  /**
+   * 分页
+   */
+  hanleTableChange = (pagination: any) => {
+    this.params.page = pagination.current;
+    this.getUserList();
+  }
 
   /**
    * 打开新增用户弹窗
@@ -154,7 +173,7 @@ class UserList extends React.Component {
         if (res.state === 0) {
           message.success('新增成功！', 1.5, () => {
             this.setState({ visible: false, tel: '', password: '' });
-            this.getUserData();
+            this.getUserList();
           });
         } else {
           message.error(res.msg);
@@ -199,10 +218,12 @@ class UserList extends React.Component {
           <Table
             rowSelection={rowSelection}
             columns={this.columns}
-            dataSource={this.state.userData}
+            dataSource={this.state.userList}
             rowKey={record => record._id}
             size="middle"
             loading={this.state.loading}
+            pagination={this.state.pagination}
+            onChange={this.hanleTableChange}
           />
           <Modal
             title="新增用户"

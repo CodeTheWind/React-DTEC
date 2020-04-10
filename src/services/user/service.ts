@@ -67,7 +67,7 @@ const updatePassword = (params: UpdatePasswordParamsType) => {
  * 上传头像
  */
 const uploadAvatar = (params: any) => {
-  return request.filePost('/img/upload', params);
+  return request.filePost('/img/upload/avatar', params);
 }
 
 export {

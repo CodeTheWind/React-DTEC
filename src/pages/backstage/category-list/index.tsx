@@ -62,19 +62,19 @@ class CategoryList extends React.Component {
     typeId: '',
     typeName: '',
     selectedDataIds: [],
-    categoryData: [],
+    categoryList: [],
   }
 
   componentDidMount = () => {
-    this.getCategoryData();
+    this.getCategoryList();
   }
 
   /**
    * 获取分类列表
    */
-  getCategoryData = () => {
+  getCategoryList = () => {
     getCategoryList().then((res: any) => {
-      this.setState({ categoryData: res.data, loading: false });
+      this.setState({ categoryList: res.data, loading: false });
     })
   }
 
@@ -85,7 +85,7 @@ class CategoryList extends React.Component {
     deleteObject(params, 'category').then((res: any) => {
       if (res.state === 200) {
         message.success('删除成功！', 2);
-        this.getCategoryData();
+        this.getCategoryList();
       } else {
         message.error(res.msg);
       }
@@ -158,7 +158,7 @@ class CategoryList extends React.Component {
       if (res.state === 200) {
         message.success('添加成功！', 1.5, () => {
           this.setState({ visible: false, typeId: '', typeName: '' });
-          this.getCategoryData();
+          this.getCategoryList();
         });
       } else {
         message.error(res.msg);
@@ -201,7 +201,7 @@ class CategoryList extends React.Component {
           <Table
             rowSelection={rowSelection}
             columns={this.columns}
-            dataSource={this.state.categoryData}
+            dataSource={this.state.categoryList}
             rowKey={record => record._id}
             size="middle"
             loading={this.state.loading}

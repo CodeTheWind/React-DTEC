@@ -2,7 +2,7 @@ export interface GetArticleDataParamsType {
   ids: string;
 }
 
-export interface GetArticleParamsParamsType {
+export interface GetArticleListParamsType {
   keyword: string;
   page: number;
   typeId: string | number;

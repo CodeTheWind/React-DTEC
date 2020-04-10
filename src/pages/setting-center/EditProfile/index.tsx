@@ -1,22 +1,70 @@
 import React from 'react';
-import { EditProfilePropsType } from '../../data';
+
 import { message } from 'antd';
+import { EditProfilePropsType } from '../data';
+import { UpdateAvatarParamsType } from '../../../services/user/data';
+import { getPersonalData, uploadAvatar, updateAvatar, updateUserData } from '../../../services/user/service';
 
 const BASE_URL = "http://127.0.0.1";
 
 class EditProfile extends React.Component<EditProfilePropsType, any> {
   constructor(props: EditProfilePropsType) {
     super(props);
+    this.state = {
+      username: '',
+      profession: '',
+      company: '',
+      motto: '',
+      avatar: '',
+    }
 
     this.upLoadImg = this.upLoadImg.bind(this);
   }
+
+  componentDidMount = () => {
+    getPersonalData().then((res: any) => {
+      if (res.state !== 302) {
+        this.setState({
+          avatar: res.data.avatar,
+          username: res.data.username,
+          profession: res.data.profession,
+          company: res.data.company,
+          motto: res.data.motto,
+        });
+      }
+    })
+  }
+
   /**
    * 保存
    */
   onSaveProfile = () => {
-    const params = this.props.profile;
-    params.avatar = undefined;
-    this.props.onSaveProfile(params);
+    const { username, profession, company, motto } = this.state;
+    const params = { username, profession, company, motto }
+
+    updateUserData(params).then((res: any) => {
+      if (!res.state) {
+        message.success('修改成功！', 1.5);
+      } else {
+        message.error(res.msg, 1.5);
+      }
+    })
+  }
+
+  /**
+   *双向绑定 用户名、职业、公司、个人简介
+   */
+  onHandleUsername = (e: any) => {
+    this.setState({ username: e.target.value })
+  }
+  onHandleProfession = (e: any) => {
+    this.setState({ profession: e.target.value });
+  }
+  onHandleCompany = (e: any) => {
+    this.setState({ company: e.target.value });
+  }
+  onHandleMotto = (e: any) => {
+    this.setState({ motto: e.target.value });
   }
 
   /**
@@ -31,13 +79,22 @@ class EditProfile extends React.Component<EditProfilePropsType, any> {
       const formdata = new FormData();
       formdata.append('file', file);
 
-      this.props.upLoadAvatar(formdata);
+      uploadAvatar(formdata).then(res => {
+        this.setState({ avatar: res.data.path });
+        const params: UpdateAvatarParamsType = { avatar: res.data.path };
+        updateAvatar(params).then((res: any) => {
+          if (res.state === 200) {
+            message.success('头像已更新！', 2);
+          } else {
+            message.error(res.msg, 2);
+          }
+        });
+      });
     }
-
   }
 
   render() {
-    const { profile } = this.props;
+    const { username, profession, company, motto, avatar, } = this.state;
 
     return (
       <div className="card">
@@ -46,7 +103,7 @@ class EditProfile extends React.Component<EditProfilePropsType, any> {
           <div className="label">头像</div>
           <div className="input">
             <div className="avatar">
-              <img src={`${BASE_URL}${profile.avatar}`} alt="" />
+              <img src={`${BASE_URL}${avatar}`} alt="" />
             </div>
             <div className="action">
               <p>支持 jpg、png 格式大小 2M 以内的图片</p>
@@ -60,8 +117,8 @@ class EditProfile extends React.Component<EditProfilePropsType, any> {
           <div className="input">
             <input type="text"
               placeholder="填写你的用户名"
-              value={profile.username}
-              onChange={(e) => this.props.setUsername(e.target.value)}
+              value={username}
+              onChange={this.onHandleUsername}
             />
           </div>
         </div>
@@ -70,8 +127,8 @@ class EditProfile extends React.Component<EditProfilePropsType, any> {
           <div className="input">
             <input type="text"
               placeholder="填写你的职业"
-              value={profile.profession}
-              onChange={(e) => this.props.setProfession(e.target.value)}
+              value={profession}
+              onChange={this.onHandleProfession}
             />
           </div>
         </div>
@@ -80,8 +137,8 @@ class EditProfile extends React.Component<EditProfilePropsType, any> {
           <div className="input">
             <input type="text"
               placeholder="填写你的公司"
-              value={profile.company}
-              onChange={(e) => this.props.setCompany(e.target.value)}
+              value={company}
+              onChange={this.onHandleCompany}
             />
           </div>
         </div>
@@ -90,8 +147,8 @@ class EditProfile extends React.Component<EditProfilePropsType, any> {
           <div className="input">
             <input type="text"
               placeholder="填写职业技能、擅长的事情、喜欢的事情"
-              value={profile.motto}
-              onChange={(e) => this.props.setMotto(e.target.value)}
+              value={motto}
+              onChange={this.onHandleMotto}
             />
           </div>
         </div>

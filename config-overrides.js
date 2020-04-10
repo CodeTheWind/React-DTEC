@@ -1,4 +1,4 @@
-const { override, fixBabelImports, addWebpackAlias } = require('customize-cra');
+const { override, fixBabelImports } = require('customize-cra');
 const path = require('path')
 
 module.exports = override(
@@ -7,7 +7,4 @@ module.exports = override(
     libraryDirectory: 'es',
     style: 'css',
   }),
-  // addWebpackAlias({
-  //   '@': path.join(__dirname, 'src'),
-  // }),
 );

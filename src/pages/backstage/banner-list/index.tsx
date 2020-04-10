@@ -6,7 +6,7 @@ class BannerList extends React.Component {
     return (
       <>
         <Breadcrumb className="breadcrumb">
-          <Breadcrumb.Item>封面图管理</Breadcrumb.Item>
+          <Breadcrumb.Item>封面图设置</Breadcrumb.Item>
         </Breadcrumb>
 
         <div className="content"></div>

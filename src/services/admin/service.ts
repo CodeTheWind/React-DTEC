@@ -1,10 +1,11 @@
 import { request } from '../request';
+import { GetUserListPramasType } from './data';
 
 /**
  * 获取用户列表
  */
-const getUserList = () => {
-  return request.get('/admin/get/userlist', {});
+const getUserList = (params: GetUserListPramasType) => {
+  return request.get('/admin/get/userlist', params);
 }
 
 /**

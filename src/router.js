@@ -23,7 +23,7 @@ const Router = () => (
       <Route exact path="/post/:ids" component={PostArticle} />
       <Route exact path="/edit/:ids" component={EditArticle} />
       <Route exact path="/user/:ids" component={UserCenter} />
-      <Route exact path="/user/setting/:type" component={SettingCenter} />
+      <Route path="/user/setting" component={SettingCenter} />
       <Route path="/admin" component={BackStage} />
 
       <Route exact path="/exception/:code" component={Exception} />

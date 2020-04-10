@@ -1,9 +1,3 @@
-/**
- * 导航组件
- */
-export interface SettingNavPropsType {
-  type: string;
-}
 
 /**
  * 修改密码组件

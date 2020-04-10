@@ -1,6 +1,7 @@
 import React from 'react';
-import { UpdatePasswordPropsType, UpdatePasswordStateType, UpdatePasswordParamsType } from '../../data';
+import { UpdatePasswordPropsType, UpdatePasswordStateType, UpdatePasswordParamsType } from '../data';
 import { message } from 'antd';
+import { updatePassword } from '../../../services/user/service';
 
 class UpdatePassword extends React.Component<UpdatePasswordPropsType, UpdatePasswordStateType> {
   constructor(props: UpdatePasswordPropsType) {
@@ -40,7 +41,13 @@ class UpdatePassword extends React.Component<UpdatePasswordPropsType, UpdatePass
         oldPassword: oldPasswd,
         newPassword: newPasswd,
       };
-      this.props.onSavePassword(params);
+      updatePassword(params).then((res: any) => {
+        if (!res.state) {
+          message.success('修改成功', 2);
+        } else {
+          message.error(res.msg, 2);
+        }
+      })
     }
   }
 
