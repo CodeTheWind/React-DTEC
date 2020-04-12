@@ -2,16 +2,16 @@ import React from 'react';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 import { message } from 'antd';
-import { Link } from 'react-router-dom';
+import { Link, RouteComponentProps } from 'react-router-dom';
 import { UserCenterStateType, ParamsType } from './data';
-import { ArticleItemType } from '../home-page/data';
+import { ArticleDataType } from '../home-page/data';
 import { getUserData } from '../../services/user/service';
 import { getArticleListOfUser, deleteArticle } from '../../services/article/service';
 import './style.less';
 
 const BASE_URL = "http://127.0.0.1";
 
-class UserCenter extends React.Component<any, UserCenterStateType> {
+class UserCenter extends React.Component<RouteComponentProps | any, UserCenterStateType> {
 
   constructor(props: any) {
     super(props);
@@ -53,7 +53,7 @@ class UserCenter extends React.Component<any, UserCenterStateType> {
    */
   getUserPost = (params: ParamsType) => {
     getArticleListOfUser(params).then((res: any) => {
-      res.data.forEach((item: ArticleItemType) => {
+      res.data.forEach((item: ArticleDataType) => {
         item.operation = false;
       });
       this.setState({ articleList: res.data, likes: res.likes, views: res.views });
@@ -65,7 +65,7 @@ class UserCenter extends React.Component<any, UserCenterStateType> {
    */
   showOperationPanel = (ids: string) => {
     const { articleList } = this.state;
-    articleList.forEach((item: ArticleItemType) => {
+    articleList.forEach((item: ArticleDataType) => {
       if (item._id === ids) {
         item.operation = true;
       } else {
@@ -80,7 +80,7 @@ class UserCenter extends React.Component<any, UserCenterStateType> {
    */
   closeOperationPanel = () => {
     const { articleList } = this.state;
-    articleList.forEach((item: ArticleItemType) => {
+    articleList.forEach((item: ArticleDataType) => {
       item.operation = false;
     });
     this.setState({ articleList });
@@ -155,7 +155,7 @@ class UserCenter extends React.Component<any, UserCenterStateType> {
             </ul>
             <div className="dynamic-panel">
               {
-                articleList.map((item: ArticleItemType) => (
+                articleList.map((item: ArticleDataType) => (
                   <div className="dynamic" key={item._id}>
                     <div className="base-info clearfix">
                       <div className="avatar">

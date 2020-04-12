@@ -34,8 +34,6 @@ export interface ArticleDataType {
   date: string;
 }
 
-
-
 /**
  * 分类列表约束
  */

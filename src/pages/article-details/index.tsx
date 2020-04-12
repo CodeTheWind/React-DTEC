@@ -5,8 +5,8 @@ import AsideItem from '../../components/AsideItem';
 import Suspended from './components/Suspended';
 import AuthorData from './components/AuthorData';
 import { message } from 'antd';
-import { Link } from 'react-router-dom';
-import { getAuthorOtherArticles } from './util';
+import { Link, RouteComponentProps } from 'react-router-dom';
+import { getAuthorOtherArticles } from './utils';
 import { ArticleDetailsStateType } from './data';
 import {
   getArticleDetails,
@@ -22,7 +22,7 @@ import './style.less';
 const BASE_URL = "http://127.0.0.1";
 
 
-class ArticleDetails extends React.Component<any, ArticleDetailsStateType> {
+class ArticleDetails extends React.Component<RouteComponentProps | any, ArticleDetailsStateType> {
   state = {
     articleData: {
       _id: '',
@@ -32,6 +32,7 @@ class ArticleDetails extends React.Component<any, ArticleDetailsStateType> {
       date: '',
       views: 0,
       category: {
+        _id: '',
         typeId: '',
         typeName: '',
       },

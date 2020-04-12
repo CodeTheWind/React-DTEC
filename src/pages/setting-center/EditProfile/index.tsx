@@ -18,7 +18,7 @@ class EditProfile extends React.Component<EditProfilePropsType, any> {
       avatar: '',
     }
 
-    this.upLoadImg = this.upLoadImg.bind(this);
+    this.uploadImg = this.uploadImg.bind(this);
   }
 
   componentDidMount = () => {
@@ -70,7 +70,7 @@ class EditProfile extends React.Component<EditProfilePropsType, any> {
   /**
    * 上传头像
    */
-  upLoadImg = (e: any) => {
+  uploadImg = (e: any) => {
     let file = e.target.files[0];
 
     if (file.size > 1024 * 1024 * 2) {
@@ -107,7 +107,7 @@ class EditProfile extends React.Component<EditProfilePropsType, any> {
             </div>
             <div className="action">
               <p>支持 jpg、png 格式大小 2M 以内的图片</p>
-              <input type="file" onChange={this.upLoadImg} />
+              <input type="file" onChange={this.uploadImg} />
               <button className="save">点击上传</button>
             </div>
           </div>

@@ -1,17 +1,19 @@
-interface ArticleType {
+import { CategoryDataType } from '../backstage/data';
+
+export interface ArticleDataType {
   _id: string;
   title: string;
   des: string;
   tags: string[];
-  category: any;
+  category: CategoryDataType;
   content: string;
-  date: string;
-  views: number;
-  author: AuthorDataType;
+  date?: string;
+  views?: number;
+  author?: AuthorDataType;
 }
 
 export interface ArticleDetailsStateType {
-  articleData: ArticleType;
+  articleData: ArticleDataType;
   authorOthers: any[];
   articleHotList: any[];
   likes: number;

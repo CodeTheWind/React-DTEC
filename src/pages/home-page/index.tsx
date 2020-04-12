@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactPropTypes } from 'react';
 import NavBar from '../../components/NavBar';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
@@ -6,16 +6,18 @@ import BackTop from '../../components/BackTop';
 import AsideItem from '../../components/AsideItem';
 import { Carousel, message } from 'antd';
 import { Link } from 'react-router-dom';
-import { ArticleItemType, ArticleListParamsType, UserLoginParamsType } from './data';
-import { isPhone, checkRegisterPassword } from './util';
+import { ArticleDataType, ArticleListParamsType, BannerDataType } from './data';
+import { isPhone, checkRegisterPassword } from './utils';
+import { getBannerList } from '../../services/service';
 import { getCategoryList } from '../../services/category/service';
 import { getArticleList, getArticleListOfType } from '../../services/article/service';
 import { login, logout, register, getPersonalData } from '../../services/user/service';
 import './style.less';
+import { LoginParamsType } from '../../services/user/data';
 
 const BASE_URL = "http://127.0.0.1";
 
-class HomePage extends React.Component {
+class HomePage extends React.Component<ReactPropTypes> {
   // 获取文章列表请求参数
   private articleListParams: ArticleListParamsType = {
     page: 1,
@@ -24,6 +26,7 @@ class HomePage extends React.Component {
   };
 
   state = {
+    // 表单数据
     registerWindowFlag: false,
     isLogin: false,
     hasNextPage: true,
@@ -32,7 +35,9 @@ class HomePage extends React.Component {
     rphone: '',
     rpasswd: '',
     rcpasswd: '',
+    // 获取的数据
     typeList: [],
+    bannerList: [],
     articleList: [],
     articleHotList: [],
     articlePopularList: [],
@@ -45,9 +50,9 @@ class HomePage extends React.Component {
     },
   }
   /**
-   * 初始加载文章分类列表和文章列表、用户信息
+   * 初始加载文章分类列表、文章列表、用户信息
    */
-  componentDidMount() {
+  componentDidMount(): void {
     this.getPersonalData();
     this.getArticleList();
 
@@ -56,19 +61,23 @@ class HomePage extends React.Component {
       this.setState({ typeList: res.data });
     });
 
+    getBannerList().then((res: any) => {
+      this.setState({ bannerList: res.data });
+    });
+
     getArticleListOfType('hot').then((res: any) => {
       this.setState({ articleHotList: res.data });
     });
 
     getArticleListOfType('popular').then((res: any) => {
       this.setState({ articlePopularList: res.data });
-    })
+    });
   }
 
   /**
    * 获取用户信息
    */
-  getPersonalData = () => {
+  getPersonalData = (): void => {
     getPersonalData().then((res: any) => {
       if (res.state !== 302) {
         this.setState({ isLogin: true, userData: res.data });
@@ -79,7 +88,7 @@ class HomePage extends React.Component {
   /**
    * 获取文章列表
    */
-  getArticleList = () => {
+  getArticleList = (): void => {
     getArticleList(this.articleListParams).then((res: any) => {
       if (res.data.length < 10) {
         this.setState({ hasNextPage: false })
@@ -91,7 +100,7 @@ class HomePage extends React.Component {
   /**
    * 搜索文章
    */
-  onSearchArticle = (keyword: string) => {
+  onSearchArticle = (keyword: string): void => {
     this.articleListParams.keyword = keyword;
     this.articleListParams.page = 1;
     this.getArticleList();
@@ -99,7 +108,7 @@ class HomePage extends React.Component {
   /**
    * 筛选分类文章
    */
-  onScreenArticle = (typeId: number) => {
+  onScreenArticle = (typeId: number): void => {
     this.articleListParams.typeId = typeId;
     this.articleListParams.page = 1;
     this.getArticleList();
@@ -107,9 +116,9 @@ class HomePage extends React.Component {
   /**
    * 加载更多
    */
-  onLoadMore = () => {
+  onLoadMore = (): void => {
     this.articleListParams.page++;
-    let articleList: ArticleItemType[] = this.state.articleList;
+    let articleList: ArticleDataType[] = this.state.articleList;
     getArticleList(this.articleListParams).then((res: any) => {
       articleList.push(...res.data)
       this.setState({ articleList });
@@ -122,41 +131,41 @@ class HomePage extends React.Component {
   /**
    * 打开登录弹窗
    */
-  onShowRegisterWindow = () => {
+  onShowRegisterWindow = (): void => {
     this.setState({ registerWindowFlag: true });
   }
   /**
    * 关闭登录弹窗
    */
-  onHideRegisterWindow = () => {
+  onHideRegisterWindow = (): void => {
     this.setState({ registerWindowFlag: false });
   }
 
   /**
    * 手机号、密码数据双向绑定
    */
-  onBindLphone = (e: any) => {
+  onBindLphone = (e: React.ChangeEvent<HTMLInputElement>): void => {
     this.setState({ lphone: e.target.value });
   }
-  onBindLpasswd = (e: any) => {
+  onBindLpasswd = (e: React.ChangeEvent<HTMLInputElement>): void => {
     this.setState({ lpasswd: e.target.value });
   }
-  onBindRphone = (e: any) => {
+  onBindRphone = (e: React.ChangeEvent<HTMLInputElement>): void => {
     this.setState({ rphone: e.target.value });
   }
-  onBindRpasswd = (e: any) => {
+  onBindRpasswd = (e: React.ChangeEvent<HTMLInputElement>): void => {
     this.setState({ rpasswd: e.target.value });
   }
-  onBindRcpasswd = (e: any) => {
+  onBindRcpasswd = (e: React.ChangeEvent<HTMLInputElement>): void => {
     this.setState({ rcpasswd: e.target.value });
   }
 
   /**
    * 登录
    */
-  onLogin = () => {
+  onLogin = (): void => {
     const { lphone, lpasswd } = this.state;
-    const params: UserLoginParamsType = { tel: lphone, password: lpasswd };
+    const params: LoginParamsType = { tel: lphone, password: lpasswd };
     if (lphone !== '') {
       if (isPhone(lphone)) {
         if (lpasswd !== '') {
@@ -184,9 +193,9 @@ class HomePage extends React.Component {
   /**
    * 注册
    */
-  onRegister = () => {
+  onRegister = (): void => {
     const { rphone, rpasswd, rcpasswd } = this.state;
-    const params: UserLoginParamsType = { tel: rphone, password: rpasswd };
+    const params: LoginParamsType = { tel: rphone, password: rpasswd };
 
     if (isPhone(rphone)) {
       switch (checkRegisterPassword(rpasswd, rcpasswd)) {
@@ -215,7 +224,7 @@ class HomePage extends React.Component {
   /**
    * 退出登录
    */
-  onLogout = () => {
+  onLogout = (): void => {
     logout().then((res: any) => {
       if (res.state === 0) {
         this.setState({ isLogin: false });
@@ -224,7 +233,7 @@ class HomePage extends React.Component {
   }
 
   render() {
-    const { userData } = this.state;
+    const { userData, bannerList } = this.state;
 
     return (
       <main className="main">
@@ -237,18 +246,13 @@ class HomePage extends React.Component {
         <section className="banner">
           <div className="container">
             <Carousel autoplay>
-              <div>
-                <h3>1</h3>
-              </div>
-              <div>
-                <h3>2</h3>
-              </div>
-              <div>
-                <h3>3</h3>
-              </div>
-              <div>
-                <h3>4</h3>
-              </div>
+              {
+                bannerList.map((item: BannerDataType) => (
+                  <div>
+                    <img src={`${BASE_URL}${item.path}`} alt={item.name} />
+                  </div>
+                ))
+              }
             </Carousel>
           </div>
         </section>
@@ -256,7 +260,7 @@ class HomePage extends React.Component {
           <div className="container content">
             {/* 文章列表 */}
             <div className="article-list">
-              {this.state.articleList.map((item: ArticleItemType) => (
+              {this.state.articleList.map((item: ArticleDataType) => (
                 <div className="article-item" key={item._id}>
                   <h2>{item.title}</h2>
                   <span>发布于 {item.date}</span>

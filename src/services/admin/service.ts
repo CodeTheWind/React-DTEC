@@ -22,8 +22,24 @@ const deleteObject = (params: any, objectName: string) => {
   return request.post(`/admin/delete/${objectName}`, params);
 }
 
+/**
+ * 上传banner图到服务器
+ */
+const uploadBanner = (params: any) => {
+  return request.filePost('/img/upload/banner', params);
+}
+
+/**
+ * 添加banner图
+ */
+const addBanner = (params: any) => {
+  return request.post('/admin/add/banner', params);
+}
+
 export {
   getUserList,
   addCategory,
   deleteObject,
+  uploadBanner,
+  addBanner,
 }

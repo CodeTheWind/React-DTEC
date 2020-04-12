@@ -2,14 +2,14 @@ import React from 'react';
 import ReactQuill from 'react-quill'; // ES6
 import TypeRadio from '../post-article/components/TypeRadio';
 import { Button, Modal, message } from 'antd';
-import { Link } from 'react-router-dom';
+import { Link, RouteComponentProps } from 'react-router-dom';
 import { getArticleDetails, updateArticle } from '../../services/article/service';
 import { getCategoryList } from '../../services/category/service';
 import 'react-quill/dist/quill.snow.css';
 import '../post-article/style.less';
+import { EditArticleStateType } from './data';
 
-
-class EditArticle extends React.Component<any, any> {
+class EditArticle extends React.Component<RouteComponentProps | any, EditArticleStateType> {
 
   constructor(props: any) {
     super(props);
@@ -20,9 +20,14 @@ class EditArticle extends React.Component<any, any> {
       title: '',
       des: '',
       content: '',
-      category: {},
+      category: {
+        _id: '',
+        typeId: '',
+        typeName: '',
+      },
       tags: [],
       categoryList: [],
+      categoryIds: '',
       visible: false,
       confirmLoading: false,
     }
@@ -69,7 +74,7 @@ class EditArticle extends React.Component<any, any> {
     this.setState({ tags: e.target.value.split(' ') });
   }
   getTypeValue = (ids: string) => {
-    this.setState({ category: ids });
+    this.setState({ categoryIds: ids });
   }
   onHandleContent = (value: string) => {
     this.setState({ content: value });
@@ -93,8 +98,8 @@ class EditArticle extends React.Component<any, any> {
    * 修改文章
    */
   handleOk = () => {
-    const { ids, title, des, content, category, tags } = this.state;
-    const params = { ids, title, des, content, category, tags };
+    const { ids, title, des, content, categoryIds, tags } = this.state;
+    const params = { ids, title, des, content, tags, category: categoryIds };
 
     this.setState({ confirmLoading: true });
     setTimeout(() => {

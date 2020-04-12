@@ -1,13 +1,13 @@
-import React from 'react';
+import React, { ReactPropTypes } from 'react';
 import { Breadcrumb, Table, Popconfirm, message, Button, Modal, Input } from 'antd';
 import { DelObjectParamsType } from '../data';
-import { UserLoginParamsType } from '../../home-page/data';
-import { isPhone } from '../../home-page/util';
+import { LoginParamsType } from '../../../services/user/data';
+import { isPhone } from '../../home-page/utils';
 import { register } from '../../../services/user/service';
 import { getUserList, deleteObject } from '../../../services/admin/service';
 import { GetUserListPramasType } from '../../../services/admin/data';
 
-class UserList extends React.Component {
+class UserList extends React.Component<ReactPropTypes> {
 
   // 表列项
   private columns = [
@@ -164,7 +164,7 @@ class UserList extends React.Component {
    * 新增用户
    */
   onConfirmAddUser = () => {
-    const params: UserLoginParamsType = {
+    const params: LoginParamsType = {
       tel: this.state.tel,
       password: this.state.password,
     };

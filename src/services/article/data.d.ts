@@ -1,3 +1,5 @@
+import { CategoryDataType } from "../../pages/backstage/data";
+
 export interface GetArticleDataParamsType {
   ids: string;
 }

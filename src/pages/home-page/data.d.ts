@@ -1,4 +1,4 @@
-export interface ArticleItemType {
+export interface ArticleDataType {
   _id: string;
   title: string;
   date: string;
@@ -15,14 +15,15 @@ export interface ArticleListParamsType {
   keyword: string;
 }
 
-export interface UserLoginParamsType {
-  tel: string;
-  password: string;
-}
-
 export interface UserDataType {
-  username: string;
   _id: string;
+  username: string;
   avatar: string;
   motto: string;
+}
+
+export interface BannerDataType {
+  _id: string;
+  name: string;
+  path: string;
 }
