@@ -1,54 +1,32 @@
-import { CategoryDataType } from '../backstage/data';
+import { ArticleType, CommentType, UserType } from '../data';
 
-export interface ArticleDataType {
-  _id: string;
-  title: string;
-  des: string;
-  tags: string[];
-  category: CategoryDataType;
-  content: string;
-  date?: string;
-  views?: number;
-  author?: AuthorDataType;
-}
+/*************** 详情页接口约束 ****************/
 
-export interface ArticleDetailsStateType {
-  articleData: ArticleDataType;
-  authorOthers: any[];
-  articleHotList: any[];
-  likes: number;
-  views: number;
+/**
+ * state接口约束
+ */ 
+export interface IState {
+  articleData: ArticleType;
+  commentList: CommentType[];
+  authorOthers: ArticleType[];
+  authorAchievement: UserType;
+  articleHotList: ArticleType[];
   userAvatar: string;
   comment: string;
   submitFlag: boolean;
   isLogin: boolean;
-  commentList: any[];
 }
 
-export interface ArticleCommentType {
-  avatar: string;
-  username: string;
-  content: string;
-  date: string;
-}
-
-export interface ArticleDetailsParamsType {
-  ids: string;
-}
-
+/**
+ * 用户信息组件props接口约束
+ */
 export interface AuthorDataPropsType {
-  userData: AuthorDataType;
-  likes: number;
-  views: number;
+  userData: UserType;
 }
 
+/**
+ * 悬浮操作组件props接口约束
+ */
 export interface SuspendedPropsType {
   onLike: () => void;
-}
-
-export interface AuthorDataType {
-  _id: string;
-  avatar: string;
-  username: string;
-  motto: string;
 }

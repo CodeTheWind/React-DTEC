@@ -7,27 +7,30 @@ import { getArticleDetails, updateArticle } from '../../services/article/service
 import { getCategoryList } from '../../services/category/service';
 import 'react-quill/dist/quill.snow.css';
 import '../post-article/style.less';
-import { EditArticleStateType } from './data';
+import { IState } from './data';
+import { AddArticleParamsType } from '../../services/article/data';
+import { CategoryType } from '../data';
 
-class EditArticle extends React.Component<RouteComponentProps | any, EditArticleStateType> {
+class EditArticle extends React.Component<RouteComponentProps<any>, IState> {
 
-  constructor(props: any) {
+  constructor(props: RouteComponentProps<any>) {
     super(props);
     this.state = {
-      ids: '',
-      userIds: '',
-      _id: '',
-      title: '',
-      des: '',
-      content: '',
-      category: {
-        _id: '',
-        typeId: '',
-        typeName: '',
-      },
-      tags: [],
-      categoryList: [],
       categoryIds: '',
+      categoryList: [],
+      articleData: {
+        _id: '',
+        title: '',
+        des: '',
+        content: '',
+        category: {
+          _id: '',
+          typeId: '',
+          typeName: '',
+        },
+        tags: [],
+      },
+
       visible: false,
       confirmLoading: false,
     }
@@ -42,17 +45,7 @@ class EditArticle extends React.Component<RouteComponentProps | any, EditArticle
     // 获取文章详情
     getArticleDetails(params).then((res: any) => {
       const { data } = res;
-
-      this.setState({
-        _id: data._id,
-        ids: data._id,
-        userIds: data.author._id,
-        title: data.title,
-        des: data.des,
-        content: data.content,
-        tags: data.tags,
-        category: data.category,
-      });
+      this.setState({ articleData: data, categoryIds: data.category._id });
     });
 
     //获取分类选项
@@ -64,20 +57,28 @@ class EditArticle extends React.Component<RouteComponentProps | any, EditArticle
   /**
    * 标题、简述、标签、分类、富文本内容
    */
-  onHandleTitle = (e: any) => {
-    this.setState({ title: e.target.value });
+  onHandleTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let { articleData } = this.state;
+    articleData.title = e.target.value;
+    this.setState({ articleData });
   }
-  onHandleDes = (e: any) => {
-    this.setState({ des: e.target.value });
+  onHandleDes = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    let { articleData } = this.state;
+    articleData.des = e.target.value;
+    this.setState({ articleData });
   }
-  onHandleTag = (e: any) => {
-    this.setState({ tags: e.target.value.split(' ') });
+  onHandleTag = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let { articleData } = this.state;
+    articleData.tags = e.target.value.split(' ');
+    this.setState({ articleData });
   }
   getTypeValue = (ids: string) => {
     this.setState({ categoryIds: ids });
   }
   onHandleContent = (value: string) => {
-    this.setState({ content: value });
+    let { articleData } = this.state;
+    articleData.content = value;
+    this.setState({ articleData });
   }
 
   /**
@@ -98,8 +99,16 @@ class EditArticle extends React.Component<RouteComponentProps | any, EditArticle
    * 修改文章
    */
   handleOk = () => {
-    const { ids, title, des, content, categoryIds, tags } = this.state;
-    const params = { ids, title, des, content, tags, category: categoryIds };
+    const { articleData, categoryIds } = this.state;
+
+    const params: AddArticleParamsType = {
+      title: articleData.title,
+      des: articleData.des,
+      content: articleData.content,
+      category: categoryIds,
+      tags: articleData.tags,
+      ids: articleData._id,
+    }
 
     this.setState({ confirmLoading: true });
     setTimeout(() => {
@@ -121,20 +130,19 @@ class EditArticle extends React.Component<RouteComponentProps | any, EditArticle
   };
 
   render() {
-    const tags = this.state.tags.join(' ');
-
+    const { articleData } = this.state;
     return (
       <main className="main">
         <div className="title">
           <div className="input-title">
             <input type="text"
               placeholder="输入文章标题..."
-              value={this.state.title}
+              value={articleData.title}
               onChange={this.onHandleTitle}
             />
           </div>
           <div className="action-bar">
-            <Link to={`/user/${this.state.userIds}`}>返回个人中心</Link>
+            <Link to={`/user/${articleData.author}`}>返回个人中心</Link>
             <Button type="primary" onClick={this.showModel}>确认修改</Button>
             <Modal
               title="修改文章"
@@ -147,11 +155,11 @@ class EditArticle extends React.Component<RouteComponentProps | any, EditArticle
             >
               <div className="row">
                 <h3>分类</h3>
-                {this.state.categoryList.map((item: any) => (
+                {this.state.categoryList.map((item: CategoryType) => (
                   <TypeRadio
                     key={item.typeId}
-                    id={item._id}
-                    defaultChecked={item.typeId === this.state.category.typeId ? true : false}
+                    ids={item._id}
+                    defaultChecked={item.typeId === articleData.category.typeId ? true : false}
                     value={item.typeName}
                     name="分类"
                     getTypeValue={this.getTypeValue}
@@ -162,7 +170,7 @@ class EditArticle extends React.Component<RouteComponentProps | any, EditArticle
                 <h3>标签</h3>
                 <input type="text"
                   placeholder="添加一个或多个标签（多个标签之间用空格隔开）"
-                  value={tags}
+                  value={articleData.tags.join(' ')}
                   onChange={this.onHandleTag}
                 />
               </div>
@@ -173,12 +181,12 @@ class EditArticle extends React.Component<RouteComponentProps | any, EditArticle
           <textarea
             placeholder="输入文章简述..."
             onChange={this.onHandleDes}
-            value={this.state.des}
+            value={articleData.des}
           ></textarea>
         </div>
         <ReactQuill
           placeholder="输入文章内容..."
-          value={this.state.content}
+          value={articleData.content}
           onChange={this.onHandleContent}
         />
       </main>

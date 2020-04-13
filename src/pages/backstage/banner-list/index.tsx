@@ -4,9 +4,13 @@ import ImgCard from './components/img-card';
 import { Breadcrumb, message } from 'antd';
 import { uploadBanner, deleteObject, addBanner } from '../../../services/admin/service';
 import { getBannerList } from '../../../services/service';
-import { BannerListStateType, BannerDataType } from './data';
+import { BannerType } from '../../data';
 
-class BannerList extends React.Component<ReactPropTypes, BannerListStateType> {
+interface IState {
+  bannerList: BannerType[];
+}
+
+class BannerList extends React.Component<ReactPropTypes, IState> {
 
   state = {
     bannerList: [],
@@ -72,7 +76,7 @@ class BannerList extends React.Component<ReactPropTypes, BannerListStateType> {
         </Breadcrumb>
 
         <div className="card">
-          {bannerList.map((item: BannerDataType) => (
+          {bannerList.map((item: BannerType) => (
             <ImgCard
               key={item.path}
               src={item.path}

@@ -1,10 +1,11 @@
-import React from 'react';
-import { UpdatePasswordPropsType, UpdatePasswordStateType, UpdatePasswordParamsType } from '../data';
+import React, { ReactPropTypes } from 'react';
 import { message } from 'antd';
 import { updatePassword } from '../../../services/user/service';
+import { IState } from './data';
+import { UpdatePasswordParamsType } from '../../../services/user/data';
 
-class UpdatePassword extends React.Component<UpdatePasswordPropsType, UpdatePasswordStateType> {
-  constructor(props: UpdatePasswordPropsType) {
+class UpdatePassword extends React.Component<ReactPropTypes, IState> {
+  constructor(props: ReactPropTypes) {
     super(props);
     this.state = {
       oldPasswd: '',
@@ -19,13 +20,13 @@ class UpdatePassword extends React.Component<UpdatePasswordPropsType, UpdatePass
   /**
    * 双向绑定
    */
-  onHandleOldPasswd = (e: any) => {
+  onHandleOldPasswd = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({ oldPasswd: e.target.value });
   }
-  onHandleNewPasswd = (e: any) => {
+  onHandleNewPasswd = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({ newPasswd: e.target.value });
   }
-  onHandleRNewPasswd = (e: any) => {
+  onHandleRNewPasswd = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({ rNewPasswd: e.target.value });
   }
 

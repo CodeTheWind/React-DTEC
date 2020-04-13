@@ -1,15 +1,15 @@
-import { ArticleDataType } from "../home-page/data";
+import { ArticleType } from '../data';
 
 /**
  * 将当前作者发布的文章进行处理
  * @param articleList 作者发布的所有文章
  * @param currentArticleIds 当前文章的ids
  */
-export function getAuthorOtherArticles(articleList: ArticleDataType[], currentArticleIds: string): ArticleDataType[] {
-  let newArticleList: ArticleDataType[] = [];
+export function getAuthorOtherArticles(articleList: ArticleType[], currentArticleIds: string): ArticleType[] {
+  let newArticleList: ArticleType[] = [];
   const COUNT: number = 7;
 
-  articleList.forEach((item: ArticleDataType) => {
+  articleList.forEach((item: ArticleType) => {
     if (item._id !== currentArticleIds) {
       newArticleList.push(item);
     }

@@ -7,7 +7,7 @@ import AuthorData from './components/AuthorData';
 import { message } from 'antd';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import { getAuthorOtherArticles } from './utils';
-import { ArticleDetailsStateType } from './data';
+import { IState } from './data';
 import {
   getArticleDetails,
   getArticleListOfType,
@@ -16,13 +16,13 @@ import {
   addArticleComment,
   praiseArticle
 } from '../../services/article/service';
-import { getPersonalData } from '../../services/user/service';
+import { getPersonalData, getUserData } from '../../services/user/service';
 import './style.less';
 
 const BASE_URL = "http://127.0.0.1";
 
 
-class ArticleDetails extends React.Component<RouteComponentProps | any, ArticleDetailsStateType> {
+class ArticleDetails extends React.Component<RouteComponentProps<any>, IState> {
   state = {
     articleData: {
       _id: '',
@@ -36,22 +36,23 @@ class ArticleDetails extends React.Component<RouteComponentProps | any, ArticleD
         typeId: '',
         typeName: '',
       },
-      tags: [],
-      author: {
-        _id: '',
-        username: '',
-        avatar: '',
-        motto: '',
-      },
+      tags: [''],
+      author: '',
     },
     commentList: [],
 
     // 该作者发布的其它文章
     authorOthers: [],
+    authorAchievement: {
+      _id: '',
+      username: '',
+      avatar: '',
+      motto: '',
+      likes: 0,
+      views: 0
+    },
     // 阅读量排行榜单
     articleHotList: [],
-    likes: 0,
-    views: 0,
 
     userAvatar: '',
     comment: '',
@@ -90,9 +91,12 @@ class ArticleDetails extends React.Component<RouteComponentProps | any, ArticleD
         this.props.history.push('/exception/404');
       } else {
         this.setState({ articleData: res.data }, () => {
-          const params = { ids: this.state.articleData.author._id };
+          const params = { ids: this.state.articleData.author };
           getArticleListOfUser(params).then(res => {
             this.setState({ authorOthers: res.data });
+          });
+          getUserData(params).then(res => {
+            this.setState({ authorAchievement: res.data });
           })
         });
       }
@@ -112,7 +116,7 @@ class ArticleDetails extends React.Component<RouteComponentProps | any, ArticleD
   /**
    * 绑定评论数据
    */
-  onHandleConmment = (e: any) => {
+  onHandleConmment = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({ comment: e.target.value });
   }
   onFocusInput = () => {
@@ -157,7 +161,7 @@ class ArticleDetails extends React.Component<RouteComponentProps | any, ArticleD
   }
 
   render() {
-    const { articleData, commentList, authorOthers } = this.state;
+    const { articleData, commentList, authorOthers, authorAchievement } = this.state;
     const otherArticles = getAuthorOtherArticles(authorOthers, articleData._id);
 
     return (
@@ -227,7 +231,7 @@ class ArticleDetails extends React.Component<RouteComponentProps | any, ArticleD
             <Suspended onLike={this.onLikesArticle} />
           </article>
           <aside>
-            <AuthorData userData={articleData.author} likes={this.state.likes} views={this.state.views} />
+            <AuthorData userData={authorAchievement} />
             <AsideItem title="阅读量排行榜" list={this.state.articleHotList} />
             {otherArticles.length > 0 &&
               <AsideItem title="作者发布的其它文章" list={otherArticles} />}

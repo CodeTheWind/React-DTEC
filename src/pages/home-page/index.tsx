@@ -1,25 +1,28 @@
 import React, { ReactPropTypes } from 'react';
-import NavBar from '../../components/NavBar';
+import NavBar from './components/nav-bar';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 import BackTop from '../../components/BackTop';
 import AsideItem from '../../components/AsideItem';
 import { Carousel, message } from 'antd';
 import { Link } from 'react-router-dom';
-import { ArticleDataType, ArticleListParamsType, BannerDataType } from './data';
+import { IState } from './data';
 import { isPhone, checkRegisterPassword } from './utils';
 import { getBannerList } from '../../services/service';
 import { getCategoryList } from '../../services/category/service';
 import { getArticleList, getArticleListOfType } from '../../services/article/service';
 import { login, logout, register, getPersonalData } from '../../services/user/service';
-import './style.less';
 import { LoginParamsType } from '../../services/user/data';
+import './style.less';
+import { ArticleType, BannerType } from '../data';
+import { GetArticleListParamsType } from '../../services/article/data';
+
 
 const BASE_URL = "http://127.0.0.1";
 
-class HomePage extends React.Component<ReactPropTypes> {
+class HomePage extends React.Component<ReactPropTypes, IState> {
   // 获取文章列表请求参数
-  private articleListParams: ArticleListParamsType = {
+  private articleListParams: GetArticleListParamsType = {
     page: 1,
     typeId: 0,
     keyword: '',
@@ -36,7 +39,7 @@ class HomePage extends React.Component<ReactPropTypes> {
     rpasswd: '',
     rcpasswd: '',
     // 获取的数据
-    typeList: [],
+    categoryList: [],
     bannerList: [],
     articleList: [],
     articleHotList: [],
@@ -57,8 +60,8 @@ class HomePage extends React.Component<ReactPropTypes> {
     this.getArticleList();
 
     getCategoryList().then((res: any) => {
-      res.data.unshift({ typeName: '全部', typeId: 0 });
-      this.setState({ typeList: res.data });
+      res.data.unshift({ typeName: '全部', typeId: '0' });
+      this.setState({ categoryList: res.data });
     });
 
     getBannerList().then((res: any) => {
@@ -108,7 +111,7 @@ class HomePage extends React.Component<ReactPropTypes> {
   /**
    * 筛选分类文章
    */
-  onScreenArticle = (typeId: number): void => {
+  onScreenArticle = (typeId: string) => {
     this.articleListParams.typeId = typeId;
     this.articleListParams.page = 1;
     this.getArticleList();
@@ -118,7 +121,7 @@ class HomePage extends React.Component<ReactPropTypes> {
    */
   onLoadMore = (): void => {
     this.articleListParams.page++;
-    let articleList: ArticleDataType[] = this.state.articleList;
+    let articleList: ArticleType[] = this.state.articleList;
     getArticleList(this.articleListParams).then((res: any) => {
       articleList.push(...res.data)
       this.setState({ articleList });
@@ -239,7 +242,7 @@ class HomePage extends React.Component<ReactPropTypes> {
       <main className="main">
         <Header />
         <NavBar
-          category={this.state.typeList}
+          category={this.state.categoryList}
           onSearch={this.onSearchArticle}
           onScreen={this.onScreenArticle}
         />
@@ -247,8 +250,8 @@ class HomePage extends React.Component<ReactPropTypes> {
           <div className="container">
             <Carousel autoplay>
               {
-                bannerList.map((item: BannerDataType) => (
-                  <div>
+                bannerList.map((item: BannerType) => (
+                  <div key={item._id}>
                     <img src={`${BASE_URL}${item.path}`} alt={item.name} />
                   </div>
                 ))
@@ -260,7 +263,7 @@ class HomePage extends React.Component<ReactPropTypes> {
           <div className="container content">
             {/* 文章列表 */}
             <div className="article-list">
-              {this.state.articleList.map((item: ArticleDataType) => (
+              {this.state.articleList.map((item: ArticleType) => (
                 <div className="article-item" key={item._id}>
                   <h2>{item.title}</h2>
                   <span>发布于 {item.date}</span>

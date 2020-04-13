@@ -1,4 +1,4 @@
-import { ArticleDataType } from "./data";
+import { ArticleDataType } from "./article-list/index";
 
 /**
  * 获取符合表格的数据源

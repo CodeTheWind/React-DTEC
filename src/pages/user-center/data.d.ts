@@ -1,20 +1,13 @@
-export interface ParamsType {
-  ids: string;
-}
+import { ArticleType, UserType } from "../data";
 
-export interface UserCenterStateType {
-  userData: userDataType;
-  articleList: any[];
-  likes: number;
-  views: number;
+/*************** 个人中心接口约束 ****************/
+export interface IState {
+  userData: UserType;
+  articleList: ArticleDataType[];
   owner: boolean;
 }
 
-interface userDataType {
-  ids: string;
-  username: string;
-  avatar: string;
-  motto: string;
-  profession: string;
-  company: string;
+export interface ArticleDataType extends ArticleType {
+  _id: string;
+  operation: boolean;
 }

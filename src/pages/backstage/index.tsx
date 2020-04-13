@@ -5,9 +5,9 @@ import CategoryList from './category-list';
 import BannerList from './banner-list';
 import Default from './default';
 import { Layout, Menu, Icon } from 'antd';
-import { Route, Link } from 'react-router-dom';
-import { BackStoragePropsType, BackStorageStateType } from './data';
+import { Route, Link, RouteComponentProps } from 'react-router-dom';
 import { getPersonalData } from '../../services/user/service';
+import { UserType } from '../data';
 import './style.less';
 
 
@@ -20,8 +20,12 @@ const NAV_LINK = [
   { title: '分类管理', link: 'category-management', iconType: 'tag' },
 ]
 
+interface IState {
+  collapsed: boolean;
+  userData: UserType;
+}
 
-class BackStage extends React.Component<BackStoragePropsType, BackStorageStateType> {
+class BackStage extends React.Component<RouteComponentProps, IState> {
 
   private defaultSelectedKeys: string[] = [''];
   private defaultOpenKeys: string[] = [''];
@@ -29,6 +33,7 @@ class BackStage extends React.Component<BackStoragePropsType, BackStorageStateTy
   state = {
     collapsed: false,
     userData: {
+      _id: '',
       avatar: '',
       username: '',
     }

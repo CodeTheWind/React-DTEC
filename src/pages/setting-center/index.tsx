@@ -3,10 +3,9 @@ import Header from '../../components/Header';
 import EditProfile from './EditProfile';
 import UpdatePassword from './UpdatePassword';
 import { Route, NavLink } from 'react-router-dom';
-import { ProfileType } from './data';
 import './style.less';
 
-class SettingCenter extends React.Component<ReactPropTypes, ProfileType> {
+class SettingCenter extends React.Component<ReactPropTypes> {
 
   private linkNav = [
     { title: '个人资料', link: 'profile' },

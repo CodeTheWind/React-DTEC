@@ -3,13 +3,15 @@
  */
 export interface UserType {
   _id: string;
-  tel: string;
-  motto: string;
   avatar: string;
   username: string;
-  company: string;
-  profession: string;
+  tel?: string;
+  motto?: string;
   admin?: boolean;
+  company?: string;
+  profession?: string;
+  likes?: number;
+  views?: number;
 }
 
 /**
@@ -17,7 +19,7 @@ export interface UserType {
  */
 export interface CategoryType {
   _id: string;
-  typeId: number | string;
+  typeId: string;
   typeName: string;
   creator?: string;
 }
@@ -26,13 +28,13 @@ export interface CategoryType {
  * 文章接口约束
  */
 export interface ArticleType {
-  _id: string;
   title: string;
-  category: string;
   tags: string[];
   des: string;
-  date: string;
+  _id?: string;
+  date?: string;
   content?: string;
+  category?: string | CategoryType;
   author?: string | UserType;
   views?: number;
   likes?: number;

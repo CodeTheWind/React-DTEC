@@ -1,15 +1,25 @@
-import React from 'react';
+import React, { ReactPropTypes } from 'react';
 import { Breadcrumb, Popconfirm, Table, Button, message, Divider, Tag } from 'antd';
 import { deleteObject } from '../../../services/admin/service';
-import { DelObjectParamsType, ArticleStateProps, ArticleDataType } from '../data';
 import { GetArticleListParamsType } from '../../../services/article/data';
 import { getArticleList } from '../../../services/article/service';
 import { getArticleListDataSource } from '../utils';
 import { Link } from 'react-router-dom';
 import { ColumnProps } from 'antd/es/table';
+import { ArticleType } from '../../data';
+import { DelObjectParamsType } from '../../../services/admin/data';
 
+export interface ArticleDataType extends ArticleType {
+  _id: string;
+}
 
-class ArticleList extends React.Component<any, ArticleStateProps> {
+interface IState {
+  articleList: ArticleDataType[];
+  selectedDataIds: string[] | number[];
+  pagination: any;
+}
+
+class ArticleList extends React.Component<ReactPropTypes, IState> {
   // 表列项
   private columns: ColumnProps<ArticleDataType>[] = [
     {

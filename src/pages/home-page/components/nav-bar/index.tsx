@@ -1,20 +1,33 @@
 import React from 'react';
-import { NavListType, NavBarPropsType, NavBarStateType } from './data';
 import './style.less';
+import { CategoryType } from '../../../data';
+
+interface NavBarPropsType {
+  category: CategoryType[];
+  onSearch: (keyword: string) => void;
+  onScreen: (typeId: string) => void;
+}
+
+interface NavBarStateType {
+  keyword: string;
+  typeId: string;
+}
 
 class NavBar extends React.Component<NavBarPropsType, NavBarStateType> {
-  constructor(props: any) {
+
+  constructor(props: NavBarPropsType) {
     super(props);
     this.state = {
-      typeId: 0,
+      typeId: '0',
       keyword: '',
     };
+    this.onHandleBindValue = this.onHandleBindValue.bind(this);
   }
 
   /**
    * 绑定搜索关键字
    */
-  onHandleBindValue = (e: any) => {
+  onHandleBindValue = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({ keyword: e.target.value });
   }
 
@@ -28,7 +41,7 @@ class NavBar extends React.Component<NavBarPropsType, NavBarStateType> {
   /**
    * 文章分类
    */
-  onScreenCategory = (typeId: number) => {
+  onScreenCategory = (typeId: string) => {
     this.setState({ typeId }, () => {
       this.props.onScreen(typeId);
     });
@@ -59,7 +72,7 @@ class NavBar extends React.Component<NavBarPropsType, NavBarStateType> {
         <div className="navbar">
           <div className="container clearfix">
             <ul className="nav-list">
-              {category.map((item: NavListType) => (
+              {category.map((item: CategoryType) => (
                 <li
                   key={item.typeId}
                   className={typeId === item.typeId ? 'active' : ''}

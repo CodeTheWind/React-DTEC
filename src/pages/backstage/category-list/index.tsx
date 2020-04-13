@@ -1,10 +1,20 @@
-import React from 'react';
+import React, { ReactPropTypes } from 'react';
 import { Breadcrumb, Popconfirm, Table, Button, message, Divider, Modal, Input } from 'antd';
-import { DelObjectParamsType } from '../data';
+import { DelObjectParamsType, AddCategoryParamsType } from '../../../services/admin/data';
+import { CategoryType } from '../../data';
 import { getCategoryList } from '../../../services/category/service';
 import { addCategory, deleteObject } from '../../../services/admin/service';
 
-class CategoryList extends React.Component {
+interface IState {
+  loading: boolean;
+  visible: boolean;
+  typeId: string;
+  typeName: string;
+  selectedDataIds: string[] | number[];
+  categoryList: CategoryType[];
+}
+
+class CategoryList extends React.Component<ReactPropTypes, IState> {
 
   // 表列项
   private columns = [
@@ -138,14 +148,14 @@ class CategoryList extends React.Component {
   /**
    * 新增分类 - 分类id
    */
-  onChangeTypeId = (e: any) => {
+  onChangeTypeId = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({ typeId: e.target.value });
   }
 
   /**
    * 新增分类 - 名称
    */
-  onChangeTypeName = (e: any) => {
+  onChangeTypeName = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({ typeName: e.target.value });
   }
 
@@ -153,7 +163,7 @@ class CategoryList extends React.Component {
    * 新增分类
    */
   onConfirmAddCategory = () => {
-    const params = { typeId: this.state.typeId, typeName: this.state.typeName };
+    const params: AddCategoryParamsType = { typeId: this.state.typeId, typeName: this.state.typeName };
     addCategory(params).then((res: any) => {
       if (res.state === 200) {
         message.success('添加成功！', 1.5, () => {

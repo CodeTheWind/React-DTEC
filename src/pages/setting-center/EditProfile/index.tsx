@@ -1,16 +1,16 @@
-import React from 'react';
-
+import React, { ReactPropTypes } from 'react';
 import { message } from 'antd';
-import { EditProfilePropsType } from '../data';
-import { UpdateAvatarParamsType } from '../../../services/user/data';
+import { IState } from './data';
+import { UpdateAvatarParamsType, UpdateDataParamsType } from '../../../services/user/data';
 import { getPersonalData, uploadAvatar, updateAvatar, updateUserData } from '../../../services/user/service';
 
 const BASE_URL = "http://127.0.0.1";
 
-class EditProfile extends React.Component<EditProfilePropsType, any> {
-  constructor(props: EditProfilePropsType) {
+class EditProfile extends React.Component<ReactPropTypes, IState> {
+  constructor(props: ReactPropTypes) {
     super(props);
     this.state = {
+      _id: '',
       username: '',
       profession: '',
       company: '',
@@ -40,7 +40,7 @@ class EditProfile extends React.Component<EditProfilePropsType, any> {
    */
   onSaveProfile = () => {
     const { username, profession, company, motto } = this.state;
-    const params = { username, profession, company, motto }
+    const params: UpdateDataParamsType = { username, profession, company, motto };
 
     updateUserData(params).then((res: any) => {
       if (!res.state) {
@@ -54,23 +54,23 @@ class EditProfile extends React.Component<EditProfilePropsType, any> {
   /**
    *双向绑定 用户名、职业、公司、个人简介
    */
-  onHandleUsername = (e: any) => {
+  onHandleUsername = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({ username: e.target.value })
   }
-  onHandleProfession = (e: any) => {
+  onHandleProfession = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({ profession: e.target.value });
   }
-  onHandleCompany = (e: any) => {
+  onHandleCompany = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({ company: e.target.value });
   }
-  onHandleMotto = (e: any) => {
+  onHandleMotto = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({ motto: e.target.value });
   }
 
   /**
    * 上传头像
    */
-  uploadImg = (e: any) => {
+  uploadImg = (e: React.ChangeEvent<HTMLInputElement & any>) => {
     let file = e.target.files[0];
 
     if (file.size > 1024 * 1024 * 2) {

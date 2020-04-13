@@ -3,32 +3,30 @@ import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 import { message } from 'antd';
 import { Link, RouteComponentProps } from 'react-router-dom';
-import { UserCenterStateType, ParamsType } from './data';
-import { ArticleDataType } from '../home-page/data';
+import { ArticleDataType, IState } from './data';
+import { GetArticleDataParamsType } from '../../services/article/data';
 import { getUserData } from '../../services/user/service';
 import { getArticleListOfUser, deleteArticle } from '../../services/article/service';
 import './style.less';
+import copy from 'copy-to-clipboard';
 
 const BASE_URL = "http://127.0.0.1";
 
-class UserCenter extends React.Component<RouteComponentProps | any, UserCenterStateType> {
+class UserCenter extends React.Component<RouteComponentProps<any>, IState> {
 
-  constructor(props: any) {
-    super(props);
-    this.state = {
-      userData: {
-        ids: '',
-        username: '',
-        avatar: '',
-        motto: '',
-        profession: '',
-        company: '',
-      },
-      articleList: [],
+  state = {
+    userData: {
+      _id: '',
+      username: '',
+      avatar: '',
+      motto: '',
+      profession: '',
+      company: '',
       likes: 0,
       views: 0,
-      owner: true,
-    }
+    },
+    articleList: [],
+    owner: true,
   }
 
   componentDidMount() {
@@ -51,12 +49,12 @@ class UserCenter extends React.Component<RouteComponentProps | any, UserCenterSt
   /**
    * 获取用户发布的文章
    */
-  getUserPost = (params: ParamsType) => {
+  getUserPost = (params: GetArticleDataParamsType) => {
     getArticleListOfUser(params).then((res: any) => {
       res.data.forEach((item: ArticleDataType) => {
         item.operation = false;
       });
-      this.setState({ articleList: res.data, likes: res.likes, views: res.views });
+      this.setState({ articleList: res.data });
     })
   }
 
@@ -97,8 +95,8 @@ class UserCenter extends React.Component<RouteComponentProps | any, UserCenterSt
    * 删除文章
    */
   deleteArticle = (ids: string) => {
-    const params: ParamsType = { ids };
-    const articleListParams: ParamsType = { ids: this.props.match.params.ids };
+    const params: GetArticleDataParamsType = { ids };
+    const articleListParams: GetArticleDataParamsType = { ids: this.props.match.params.ids };
 
     deleteArticle(params).then((res: any) => {
       if (!res.state) {
@@ -109,6 +107,20 @@ class UserCenter extends React.Component<RouteComponentProps | any, UserCenterSt
         message.error(res.msg, 1.5);
       }
     })
+  }
+
+  /**
+   * 分享文章
+   */
+  onShareArticle = (ids: string): void => {
+    const url = window.location.href;
+    let newUrl = url.slice(0, url.indexOf("#")) + '/#/article/' + ids;
+
+    if (copy(newUrl)) {
+      message.success('复制成功,快去分享吧！');
+    } else {
+      message.error('复制失败，请重试！');
+    }
   }
 
   render() {
@@ -178,12 +190,12 @@ class UserCenter extends React.Component<RouteComponentProps | any, UserCenterSt
                         <i className="iconfont icon-like"></i>{item.likes === 0 ? '赞' : item.likes}
                       </div>
                       <div className="action-item">
-                        <i className="iconfont icon-chat"></i>{item.comments?.length === 0 ? '评论' : item.comments?.length}
+                        <i className="iconfont icon-chat"></i>评论
                       </div>
-                      <div className="action-item">
+                      <div className="action-item" onClick={() => this.onShareArticle(item._id)}>
                         <i className="iconfont icon-share"></i>分享
                       </div>
-                      {owner && <div className="action-item" onClick={(e) => { e.stopPropagation(); this.showOperationPanel(item._id) }}>
+                      {owner && <div className="action-item" onClick={(e: any) => { e.stopPropagation(); this.showOperationPanel(item._id) }}>
                         <i className="iconfont icon-manage"></i>操作
                         {item.operation && <ul className="operation">
                           <li onClick={() => this.updateArticle(item._id)}>修改</li>
@@ -200,12 +212,11 @@ class UserCenter extends React.Component<RouteComponentProps | any, UserCenterSt
             <section className="achievement">
               <div className="title">个人成就</div>
               <ul className="achievement-list">
-                <li><i className="iconfont icon-like"></i>文章被点赞 {this.state.likes}</li>
-                <li><i className="iconfont icon-view"></i>文章被阅读 {this.state.views}</li>
-                <li><i className="iconfont icon-collection"></i>文章被收藏 12,125</li>
+                <li><i className="iconfont icon-like"></i>文章被点赞 {userData.likes}</li>
+                <li><i className="iconfont icon-view"></i>文章被阅读 {userData.views}</li>
+                <li><i className="iconfont icon-collection"></i>文章被收藏 0</li>
               </ul>
             </section>
-            <section></section>
           </aside>
         </main>
         <Footer />

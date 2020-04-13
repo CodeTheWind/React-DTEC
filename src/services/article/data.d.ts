@@ -21,6 +21,6 @@ export interface AddArticleParamsType {
   tags: string[];
   category: string;
   des: string;
-  content: string;
+  content: string | undefined;
   ids: string;
 }

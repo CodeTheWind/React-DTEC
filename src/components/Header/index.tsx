@@ -1,7 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom'
-import { NavListType } from './data';
 import './style.less';
+
+interface NavListType {
+  title: string;
+  link: string;
+}
 
 const logo = require('../../assets/logo.png');
 const NAV_LIST: NavListType[] = [

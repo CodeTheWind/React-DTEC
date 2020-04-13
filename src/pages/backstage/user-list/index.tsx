@@ -1,13 +1,23 @@
 import React, { ReactPropTypes } from 'react';
 import { Breadcrumb, Table, Popconfirm, message, Button, Modal, Input } from 'antd';
-import { DelObjectParamsType } from '../data';
 import { LoginParamsType } from '../../../services/user/data';
 import { isPhone } from '../../home-page/utils';
 import { register } from '../../../services/user/service';
 import { getUserList, deleteObject } from '../../../services/admin/service';
-import { GetUserListPramasType } from '../../../services/admin/data';
+import { GetUserListPramasType, DelObjectParamsType } from '../../../services/admin/data';
+import { UserType } from '../../data';
 
-class UserList extends React.Component<ReactPropTypes> {
+export interface IState {
+  userList: UserType[];
+  loading: boolean;
+  visible: boolean;
+  selectedDataIds: number[] | string[];
+  pagination: any;
+  tel: string;
+  password: string;
+}
+
+class UserList extends React.Component<ReactPropTypes, IState> {
 
   // 表列项
   private columns = [
@@ -60,7 +70,8 @@ class UserList extends React.Component<ReactPropTypes> {
     visible: false,
     selectedDataIds: [],
     pagination: {
-      total: 0
+      total: 0,
+      current: 1,
     },
     tel: '',
     password: '',
@@ -121,7 +132,7 @@ class UserList extends React.Component<ReactPropTypes> {
   /**
    * 分页
    */
-  hanleTableChange = (pagination: any) => {
+  hanleTableChange = (pagination: any): void => {
     this.params.page = pagination.current;
     this.getUserList();
   }
@@ -149,14 +160,14 @@ class UserList extends React.Component<ReactPropTypes> {
   /**
    * 新增用户 - 手机号
    */
-  onChangeTel = (e: any) => {
+  onChangeTel = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({ tel: e.target.value });
   }
 
   /**
    * 新增用户 - 密码
    */
-  onChangePassword = (e: any) => {
+  onChangePassword = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({ password: e.target.value });
   }
 

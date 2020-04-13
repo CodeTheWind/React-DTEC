@@ -1,7 +1,7 @@
 import React from 'react';
-import './style.less';
 import { Link } from 'react-router-dom';
 import { AuthorDataPropsType } from '../../data';
+import './style.less';
 
 const BASE_URL = "http://127.0.0.1";
 
@@ -23,8 +23,8 @@ class AuthorData extends React.Component<AuthorDataPropsType> {
           </div>
         </div>
         <div className="about-author">
-          <p><i className="iconfont icon-like"></i> 文章获赞 {this.props.likes}</p>
-          <p><i className="iconfont icon-view"></i> 文章被阅读 {this.props.views}</p>
+          <p><i className="iconfont icon-like"></i> 文章获赞 {userData.likes}</p>
+          <p><i className="iconfont icon-view"></i> 文章被阅读 {userData.views}</p>
         </div>
       </section>
     )

@@ -2,19 +2,21 @@ import React from 'react';
 import ReactQuill from 'react-quill';
 import TypeRadio from './components/TypeRadio';
 import { Button, Modal, message } from 'antd';
-import { Link } from 'react-router-dom';
+import { Link, RouteComponentProps } from 'react-router-dom';
 import { getCategoryList } from '../../services/category/service';
 import { addArticle } from '../../services/article/service';
 import 'react-quill/dist/quill.snow.css';
 import './style.less';
+import { IState } from './data';
+import { AddArticleParamsType } from '../../services/article/data';
 
 
-class PostArticle extends React.Component<any, any> {
+class PostArticle extends React.Component<RouteComponentProps<any>, IState> {
 
-  constructor(props: any) {
+  constructor(props: RouteComponentProps<any>) {
     super(props);
     this.state = {
-      ids: '',
+      userIds: '',
       title: '',
       des: '',
       content: '',
@@ -33,7 +35,7 @@ class PostArticle extends React.Component<any, any> {
   componentDidMount() {
     getCategoryList().then((res: any) => {
       this.setState({
-        ids: this.props.match.params.ids,
+        userIds: this.props.match.params.ids,
         categoryList: res.data
       });
     })
@@ -42,13 +44,13 @@ class PostArticle extends React.Component<any, any> {
   /**
    * 标题、简述、标签、分类、富文本内容
    */
-  onHandleTitle = (e: any) => {
+  onHandleTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({ title: e.target.value });
   }
-  onHandleDes = (e: any) => {
+  onHandleDes = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     this.setState({ des: e.target.value });
   }
-  onHandleTag = (e: any) => {
+  onHandleTag = (e: React.ChangeEvent<HTMLInputElement>) => {
     const tag: string = e.target.value;
     const tags: string[] = tag.split(' ');
     this.setState({ tags });
@@ -78,8 +80,8 @@ class PostArticle extends React.Component<any, any> {
    * 发布文章
    */
   handleOk = () => {
-    const { ids, title, des, content, category, tags } = this.state;
-    const params = { ids, title, des, content, category, tags };
+    const { userIds, title, des, content, category, tags } = this.state;
+    const params: AddArticleParamsType = { ids: userIds, title, des, content, category, tags };
 
     this.setState({ confirmLoading: true });
     setTimeout(() => {
@@ -128,7 +130,7 @@ class PostArticle extends React.Component<any, any> {
                 {this.state.categoryList.map((item: any) => (
                   <TypeRadio
                     key={item._id}
-                    id={item._id}
+                    ids={item._id}
                     value={item.typeName}
                     name="分类"
                     getTypeValue={this.getTypeValue}
@@ -139,7 +141,7 @@ class PostArticle extends React.Component<any, any> {
                 <h3>标签</h3>
                 <input type="text"
                   placeholder="添加一个或多个标签（多个标签用空格分隔）"
-                  value={this.state.tag}
+                  value={this.state.tags}
                   onChange={this.onHandleTag}
                 />
               </div>
