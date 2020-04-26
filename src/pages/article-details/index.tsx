@@ -14,7 +14,8 @@ import {
   getArticleListOfUser,
   getArticleComments,
   addArticleComment,
-  praiseArticle
+  praiseArticle,
+  collectArticle
 } from '../../services/article/service';
 import { getPersonalData, getUserData } from '../../services/user/service';
 import './style.less';
@@ -131,7 +132,7 @@ class ArticleDetails extends React.Component<RouteComponentProps<any>, IState> {
   /**
    * 点赞文章
    */
-  onLikesArticle = () => {
+  onLikeArticle = () => {
     const { params } = this.props.match;
     praiseArticle(params).then((res: any) => {
       if (!res.state) {
@@ -141,6 +142,21 @@ class ArticleDetails extends React.Component<RouteComponentProps<any>, IState> {
       }
     })
   }
+
+  /**
+   * 收藏文章
+   */
+  onCollectArticle = () => {
+    const { params } = this.props.match;
+    collectArticle(params).then((res: any) => {
+      if (!res.state) {
+        message.success(res.msg, 1.5);
+      } else {
+        message.error(res.msg, 1.5);
+      }
+    })
+  }
+
 
   /**
    * 评论文章
@@ -228,7 +244,7 @@ class ArticleDetails extends React.Component<RouteComponentProps<any>, IState> {
                 }
               </div>
             </div>
-            <Suspended onLike={this.onLikesArticle} />
+            <Suspended onLike={this.onLikeArticle} onCollect={this.onCollectArticle} />
           </article>
           <aside>
             <AuthorData userData={authorAchievement} />

@@ -3,12 +3,13 @@ import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 import { message } from 'antd';
 import { Link, RouteComponentProps } from 'react-router-dom';
-import { ArticleDataType, IState } from './data';
+import { ArticleDataType, IState, CollectionType } from './data';
 import { GetArticleDataParamsType } from '../../services/article/data';
 import { getUserData } from '../../services/user/service';
-import { getArticleListOfUser, deleteArticle } from '../../services/article/service';
+import { getArticleListOfUser, deleteArticle, getCollectionList, cancelCollection } from '../../services/article/service';
 import './style.less';
 import copy from 'copy-to-clipboard';
+
 
 const BASE_URL = "http://127.0.0.1";
 
@@ -26,7 +27,9 @@ class UserCenter extends React.Component<RouteComponentProps<any>, IState> {
       views: 0,
     },
     articleList: [],
+    collectionList: [],
     owner: true,
+    panel: 'dynamic',
   }
 
   componentDidMount() {
@@ -44,6 +47,7 @@ class UserCenter extends React.Component<RouteComponentProps<any>, IState> {
       }
     });
     this.getUserPost(params);
+    this.getCollectionList(params);
   }
 
   /**
@@ -56,6 +60,29 @@ class UserCenter extends React.Component<RouteComponentProps<any>, IState> {
       });
       this.setState({ articleList: res.data });
     })
+  }
+
+  /**
+   * 获取用户收藏的文章
+   */
+  getCollectionList = (params: GetArticleDataParamsType) => {
+    getCollectionList(params).then((res: any) => {
+      this.setState({ collectionList: res.data });
+    })
+  }
+
+  /**
+   * 切换至用户动态面板
+   */
+  onChangeToDynamic = () => {
+    this.setState({ panel: 'dynamic' });
+  }
+
+  /**
+   * 切换至收藏面板
+   */
+  onChangeToCollection = () => {
+    this.setState({ panel: 'collection' });
   }
 
   /**
@@ -110,6 +137,24 @@ class UserCenter extends React.Component<RouteComponentProps<any>, IState> {
   }
 
   /**
+   * 取消收藏
+   */
+  onCancelCollection = (ids: string) => {
+    const params: GetArticleDataParamsType = { ids };
+    const collectionListParams: GetArticleDataParamsType = { ids: this.props.match.params.ids };
+
+    cancelCollection(params).then((res: any) => {
+      if (res.state === 200) {
+        message.success('取消收藏成功！', 1.5, () => {
+          this.getCollectionList(collectionListParams);
+        })
+      } else {
+        message.error(res.msg, 1.5);
+      }
+    })
+  }
+
+  /**
    * 分享文章
    */
   onShareArticle = (ids: string): void => {
@@ -124,7 +169,7 @@ class UserCenter extends React.Component<RouteComponentProps<any>, IState> {
   }
 
   render() {
-    const { userData, owner, articleList } = this.state;
+    const { userData, owner, articleList, collectionList, panel } = this.state;
 
     return (
       <>
@@ -158,55 +203,91 @@ class UserCenter extends React.Component<RouteComponentProps<any>, IState> {
               </div>
             </div>
             <ul className="tab-card">
-              <li>动态</li>
-              <li>专栏</li>
+              <li className={panel === 'dynamic' ? 'active' : ''} onClick={this.onChangeToDynamic}>动态</li>
+              <li className={panel === 'collection' ? 'active' : ''} onClick={this.onChangeToCollection}>收藏</li>
               <li>沸点</li>
               <li>分享</li>
               <li>赞</li>
               <li>小册</li>
             </ul>
-            <div className="dynamic-panel">
-              {
-                articleList.map((item: ArticleDataType) => (
-                  <div className="dynamic" key={item._id}>
-                    <div className="base-info clearfix">
-                      <div className="avatar">
-                        <img src={`${BASE_URL}${userData.avatar}`} alt="" />
+            {/* 动态 */}
+            {
+              panel === 'dynamic' &&
+              <div className="dynamic-panel">
+                {
+                  articleList.map((item: ArticleDataType) => (
+                    <div className="dynamic" key={item._id}>
+                      <div className="base-info clearfix">
+                        <div className="avatar">
+                          <img src={`${BASE_URL}${userData.avatar}`} alt="" />
+                        </div>
+                        <div className="info">
+                          <p className="username">{userData.username}</p>
+                          <p>{userData.profession || '暂无'}<span>·</span>{item.date}</p>
+                        </div>
                       </div>
-                      <div className="info">
-                        <p className="username">{userData.username}</p>
-                        <p>{userData.profession || '暂无'}<span>·</span>{item.date}</p>
+                      <Link to={`/article/${item._id}`} className="article">
+                        <p className="title">
+                          <span>{item.category.typeName}</span>
+                          {item.title}
+                        </p>
+                        <p className="desc">{item.des}</p>
+                      </Link>
+                      <div className="action-box">
+                        <div className="action-item">
+                          <i className="iconfont icon-like"></i>{item.likes === 0 ? '赞' : item.likes}
+                        </div>
+                        <div className="action-item">
+                          <i className="iconfont icon-chat"></i>评论
+                      </div>
+                        <div className="action-item" onClick={() => this.onShareArticle(item._id)}>
+                          <i className="iconfont icon-share"></i>分享
+                      </div>
+                        {owner && <div className="action-item" onClick={(e: any) => { e.stopPropagation(); this.showOperationPanel(item._id) }}>
+                          <i className="iconfont icon-manage"></i>操作
+                        {item.operation && <ul className="operation">
+                            <li onClick={() => this.updateArticle(item._id)}>修改</li>
+                            <li onClick={() => this.deleteArticle(item._id)}>删除</li>
+                          </ul>}
+                        </div>}
                       </div>
                     </div>
-                    <Link to={`/article/${item._id}`} className="article">
-                      <p className="title">
-                        <span>{item.category}</span>
-                        {item.title}
-                      </p>
-                      <p className="desc">{item.des}</p>
-                    </Link>
-                    <div className="action-box">
-                      <div className="action-item">
-                        <i className="iconfont icon-like"></i>{item.likes === 0 ? '赞' : item.likes}
-                      </div>
-                      <div className="action-item">
-                        <i className="iconfont icon-chat"></i>评论
-                      </div>
-                      <div className="action-item" onClick={() => this.onShareArticle(item._id)}>
-                        <i className="iconfont icon-share"></i>分享
-                      </div>
-                      {owner && <div className="action-item" onClick={(e: any) => { e.stopPropagation(); this.showOperationPanel(item._id) }}>
-                        <i className="iconfont icon-manage"></i>操作
-                        {item.operation && <ul className="operation">
-                          <li onClick={() => this.updateArticle(item._id)}>修改</li>
-                          <li onClick={() => this.deleteArticle(item._id)}>删除</li>
-                        </ul>}
-                      </div>}
+                  ))
+                }
+              </div>
+            }
+
+            {/*收藏  */}
+            {
+              panel === 'collection' &&
+              collectionList.map((item: CollectionType) => (
+                <div className="collection-panel" key={item._id}>
+                  <div className="collection">
+                    <div className="data">
+                      <span className="type">{item.article.category.typeName}</span>
+                      <label>·</label>
+                      <Link to={`/user/${item.article.author._id}`} target="_blank">{item.article.author.username}</Link>
+                      <label>·</label>
+                      <span className="date">{item.article.date}</span>
+                    </div>
+                    <Link to={`/article/${item.article._id}`} className="title">{item.article.title}</Link>
+                    <div className="info">
+                      <span><i className="iconfont icon-view"></i>{item.article.views}</span>
+                      <span><i className="iconfont icon-like"></i>{item.article.likes}</span>
+                      {
+                        owner &&
+                        <span>
+                          <i className="iconfont icon-collected"
+                            title="取消收藏"
+                            onClick={() => this.onCancelCollection(item._id)}></i>
+                        </span>
+                      }
                     </div>
                   </div>
-                ))
-              }
-            </div>
+                </div>
+              ))
+            }
+
           </section>
           <aside className="user-aside">
             <section className="achievement">

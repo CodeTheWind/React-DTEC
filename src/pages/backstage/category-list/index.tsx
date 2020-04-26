@@ -1,5 +1,5 @@
 import React, { ReactPropTypes } from 'react';
-import { Breadcrumb, Popconfirm, Table, Button, message, Divider, Modal, Input } from 'antd';
+import { Breadcrumb, Popconfirm, Table, Button, message, Modal, Input } from 'antd';
 import { DelObjectParamsType, AddCategoryParamsType } from '../../../services/admin/data';
 import { CategoryType } from '../../data';
 import { getCategoryList } from '../../../services/category/service';
@@ -51,8 +51,6 @@ class CategoryList extends React.Component<ReactPropTypes, IState> {
       key: 'action',
       render: (text: any, record: any) => (
         <span>
-          <span className="op">编辑</span>
-          <Divider type="vertical" />
           <Popconfirm
             title={`你确定要删除 “${record.typeName}” 分类吗？`}
             onConfirm={() => this.onConfirmDelOne(record._id)}
@@ -213,7 +211,6 @@ class CategoryList extends React.Component<ReactPropTypes, IState> {
             columns={this.columns}
             dataSource={this.state.categoryList}
             rowKey={record => record._id}
-            size="middle"
             loading={this.state.loading}
           />
           <Modal

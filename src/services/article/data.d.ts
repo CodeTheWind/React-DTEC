@@ -7,7 +7,7 @@ export interface GetArticleDataParamsType {
 export interface GetArticleListParamsType {
   keyword: string;
   page: number;
-  typeId: string | number;
+  category: string | number;
   count?: number;
 }
 

@@ -1,5 +1,6 @@
 export interface GetUserListPramasType {
   page: number;
+  keyword: string;
 }
 
 export interface DelObjectParamsType {

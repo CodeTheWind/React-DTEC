@@ -74,9 +74,9 @@ class NavBar extends React.Component<NavBarPropsType, NavBarStateType> {
             <ul className="nav-list">
               {category.map((item: CategoryType) => (
                 <li
-                  key={item.typeId}
-                  className={typeId === item.typeId ? 'active' : ''}
-                  onClick={() => this.onScreenCategory(item.typeId)}
+                  key={item._id}
+                  className={typeId === item._id ? 'active' : ''}
+                  onClick={() => this.onScreenCategory(item._id)}
                 >{item.typeName}</li>
               ))}
             </ul>

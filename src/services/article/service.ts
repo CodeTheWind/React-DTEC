@@ -86,15 +86,39 @@ const deleteArticle = (params: GetArticleDataParamsType) => {
   return request.post('/article/delete', params);
 }
 
+/**
+ * 收藏文章
+ */
+const collectArticle = (params: GetArticleDataParamsType) => {
+  return request.post('/article/add/collection', params);
+}
+
+/**
+ * 获取用户的收藏列表
+ */
+const getCollectionList = (params: GetArticleDataParamsType) => {
+  return request.get('/article/get/collections', params)
+}
+
+/**
+ * 取消收藏
+ */
+const cancelCollection = (params: GetArticleDataParamsType) => {
+  return request.post('/article/cancel/collection', params);
+}
+
 export {
   getArticleList,
   getArticleListOfUser,
   getArticleListOfType,
   getArticleDetails,
   getArticleComments,
+  getCollectionList,
+  cancelCollection,
   addArticle,
   addArticleComment,
   praiseArticle,
+  collectArticle,
   updateArticle,
   deleteArticle,
 }

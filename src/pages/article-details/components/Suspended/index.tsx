@@ -14,7 +14,9 @@ class Suspended extends React.Component<SuspendedPropsType> {
   /**
    * 收藏文章
    */
-  onCollectArticle = () => { }
+  onCollectArticle = () => {
+    this.props.onCollect();
+  }
   /**
    * 分享文章，复制链接
    */

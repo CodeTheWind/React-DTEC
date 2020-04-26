@@ -1,5 +1,5 @@
 import React, { ReactPropTypes } from 'react';
-import { Breadcrumb, Popconfirm, Table, Button, message, Divider, Tag } from 'antd';
+import { Breadcrumb, Popconfirm, Table, Button, message, Divider, Tag, Card, Input } from 'antd';
 import { deleteObject } from '../../../services/admin/service';
 import { GetArticleListParamsType } from '../../../services/article/data';
 import { getArticleList } from '../../../services/article/service';
@@ -18,6 +18,8 @@ interface IState {
   selectedDataIds: string[] | number[];
   pagination: any;
 }
+
+const { Search } = Input;
 
 class ArticleList extends React.Component<ReactPropTypes, IState> {
   // 表列项
@@ -114,7 +116,7 @@ class ArticleList extends React.Component<ReactPropTypes, IState> {
 
   private params: GetArticleListParamsType = {
     page: 1,
-    typeId: '0',
+    category: '0',
     keyword: '',
   }
 
@@ -154,6 +156,18 @@ class ArticleList extends React.Component<ReactPropTypes, IState> {
    */
   hanleTableChange = (pagination: any) => {
     this.params.page = pagination.current;
+    this.getArticleList();
+  }
+
+  /**
+   * 搜索文章
+   */
+  onSearchArticle = (value: string): void => {
+    this.params = {
+      page: 1,
+      keyword: value,
+      category: '0',
+    };
     this.getArticleList();
   }
 
@@ -203,6 +217,17 @@ class ArticleList extends React.Component<ReactPropTypes, IState> {
           <Breadcrumb.Item>文章管理</Breadcrumb.Item>
         </Breadcrumb>
 
+        <Card className="action-card">
+          <div className="row">
+            <span>搜索文章：</span>
+            <Search
+              placeholder="标题"
+              onSearch={value => this.onSearchArticle(value)}
+              style={{ width: 220, marginLeft: 5 }}
+            />
+          </div>
+        </Card>
+
         <div className="card">
           <div className="row">
             {
@@ -225,9 +250,9 @@ class ArticleList extends React.Component<ReactPropTypes, IState> {
             columns={this.columns}
             dataSource={articleList}
             rowKey={record => record._id}
-            size="middle"
             pagination={pagination}
             onChange={this.hanleTableChange}
+            size="middle"
           />
         </div>
       </>

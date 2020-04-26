@@ -1,5 +1,5 @@
 import React, { ReactPropTypes } from 'react';
-import { Breadcrumb, Table, Popconfirm, message, Button, Modal, Input } from 'antd';
+import { Breadcrumb, Table, Popconfirm, message, Button, Modal, Input, Card } from 'antd';
 import { LoginParamsType } from '../../../services/user/data';
 import { isPhone } from '../../home-page/utils';
 import { register } from '../../../services/user/service';
@@ -16,6 +16,8 @@ export interface IState {
   tel: string;
   password: string;
 }
+
+const { Search } = Input;
 
 class UserList extends React.Component<ReactPropTypes, IState> {
 
@@ -62,6 +64,7 @@ class UserList extends React.Component<ReactPropTypes, IState> {
 
   private params: GetUserListPramasType = {
     page: 1,
+    keyword: '',
   }
 
   state = {
@@ -195,6 +198,17 @@ class UserList extends React.Component<ReactPropTypes, IState> {
     }
   }
 
+  /**
+   * 搜索用户
+   */
+  onSearchUser = (value: string) => {
+    this.params = {
+      page: 1,
+      keyword: value
+    };
+    this.getUserList();
+  }
+
   render() {
     const { selectedDataIds } = this.state;
     const rowSelection = {
@@ -210,6 +224,18 @@ class UserList extends React.Component<ReactPropTypes, IState> {
           <Breadcrumb.Item>用户管理</Breadcrumb.Item>
         </Breadcrumb>
 
+        <Card className="action-card">
+          <div className="row">
+            <span>搜索用户：</span>
+            <Search
+              placeholder="手机号/用户名"
+              onSearch={value => this.onSearchUser(value)}
+              style={{ width: 220, marginLeft: 5 }}
+            />
+            <Button type="primary" onClick={this.onOpenModal} style={{ float: 'right' }}>新增用户</Button>
+          </div>
+        </Card>
+
         <div className="card">
           <div className="row">
             {
@@ -224,17 +250,16 @@ class UserList extends React.Component<ReactPropTypes, IState> {
                 </Popconfirm> :
                 <Button type="primary" disabled={!hasSelected}>批量删除</Button>
             }
-            <Button type="primary" onClick={this.onOpenModal}>新增用户</Button>
           </div>
           <Table
             rowSelection={rowSelection}
             columns={this.columns}
             dataSource={this.state.userList}
             rowKey={record => record._id}
-            size="middle"
             loading={this.state.loading}
             pagination={this.state.pagination}
             onChange={this.hanleTableChange}
+            size="middle"
           />
           <Modal
             title="新增用户"

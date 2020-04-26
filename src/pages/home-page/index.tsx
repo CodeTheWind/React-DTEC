@@ -24,7 +24,7 @@ class HomePage extends React.Component<ReactPropTypes, IState> {
   // 获取文章列表请求参数
   private articleListParams: GetArticleListParamsType = {
     page: 1,
-    typeId: 0,
+    category: 0,
     keyword: '',
   };
 
@@ -60,7 +60,7 @@ class HomePage extends React.Component<ReactPropTypes, IState> {
     this.getArticleList();
 
     getCategoryList().then((res: any) => {
-      res.data.unshift({ typeName: '全部', typeId: '0' });
+      res.data.unshift({ typeName: '全部', _id: '0' });
       this.setState({ categoryList: res.data });
     });
 
@@ -111,8 +111,8 @@ class HomePage extends React.Component<ReactPropTypes, IState> {
   /**
    * 筛选分类文章
    */
-  onScreenArticle = (typeId: string) => {
-    this.articleListParams.typeId = typeId;
+  onScreenArticle = (value: string) => {
+    this.articleListParams.category = value;
     this.articleListParams.page = 1;
     this.getArticleList();
   }

@@ -51,7 +51,6 @@ export interface CommentType {
   date: string;
 }
 
-
 /**
  * banner接口约束
  */

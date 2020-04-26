@@ -118,7 +118,7 @@
         transition: all .4s linear;
       }
 
-      li:first-child::after {
+      li.active::after {
         opacity: 1;
       }
 
@@ -256,6 +256,74 @@
           .action-item:last-child {
             border: 0;
           }
+        }
+      }
+    }
+
+    .collection-panel {
+
+      .collection {
+        padding: 20px 0 10px 0;
+        border-bottom: 1px solid #eaeaea;
+
+        .data {
+
+          .type {
+            color: rgb(29, 29, 185);
+          }
+
+          label {
+            margin: 0 5px;
+          }
+
+          a,
+          .date {
+            color: #999;
+          }
+
+          a:hover {
+            color: red;
+          }
+        }
+
+        .title {
+          display: block;
+          margin-top: 8px;
+          height: 30px;
+          line-height: 30px;
+          font-size: 17px;
+          color: #333333;
+          font-weight: bold;
+        }
+
+        .title:hover {
+          text-decoration: underline;
+        }
+
+        .info {
+          color: #999999;
+
+          span {
+            margin-right: 15px;
+
+            i {
+              margin-right: 3px;
+              font-size: 20px;
+              vertical-align: -2px;
+            }
+
+            .icon-like {
+              font-size: 15px;
+              vertical-align: 0;
+            }
+
+            .icon-collected {
+              font-size: 24px;
+              color: orange;
+              cursor: pointer;
+            }
+          }
+
         }
       }
     }

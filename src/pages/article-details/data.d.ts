@@ -4,7 +4,7 @@ import { ArticleType, CommentType, UserType } from '../data';
 
 /**
  * state接口约束
- */ 
+ */
 export interface IState {
   articleData: ArticleType;
   commentList: CommentType[];
@@ -29,4 +29,5 @@ export interface AuthorDataPropsType {
  */
 export interface SuspendedPropsType {
   onLike: () => void;
+  onCollect: () => void;
 }
